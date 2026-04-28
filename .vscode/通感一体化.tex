@@ -1,0 +1,106 @@
+% !TeX program = xelatex
+\documentclass[twoside, 10pt]{ctexart}
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.8cm, bottom=2.5cm}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+\usepackage{cite}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\usepackage{fancyhdr}
+\usepackage{ragged2e} % 用于支持 \justify 命令
+\usepackage{lipsum} % 仅用于示例，实际可删除
+
+% 字体设置
+\setCJKmainfont[BoldFont=SimHei, ItalicFont=KaiTi]{SimSun} % 正文：五号宋体
+\setCJKsansfont{SimHei} % 黑体
+\setCJKmonofont{SimSun} % 等宽字体
+\setCJKfamilyfont{kaishu}{KaiTi_GB2312} % 楷体_GB2312
+\newcommand{\kaishu}{\CJKfamily{kaishu}} % 定义楷体命令
+
+% 字号设置
+\newcommand{\xiaowu}{\fontsize{9pt}{11pt}\selectfont} % 小五
+\newcommand{\sanhao}{\fontsize{16pt}{18pt}\selectfont} % 三号
+\newcommand{\wuhhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE,LO]{\small 通信学报}
+\fancyhead[LE,RO]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\upcite}[1]{\textsuperscript{[#1]}}
+
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{definition}{定义}[section]
+
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+\begin{document}
+% 标题 - 三号黑体
+\begin{center}
+    {\sanhao \textbf{太赫兹通感一体化系统的动态波束跟踪与功率分配}}\\
+    \vspace{1em}
+    % 作者 - 五号楷体_GB2312
+    {\wuhhao \kaishu 秦政$^{1}$}\\
+    \vspace{0.3em}
+    {\small （1. 重庆邮电大学，重庆 400065）}\\
+    \vspace{1em}
+\end{center}
+
+% 摘要 - 小五字体
+\noindent {\xiaowu \textbf{摘\quad 要}：第六代移动通信（6G）网络将实现从「万物互联」到「万物智联」的跨越，除了传统通信功能外，还将集成高精度感知能力，支撑自动驾驶、数字孪生、工业物联网等新兴应用场景。通感一体化（Integrated Sensing and Communication, ISAC）作为6G的核心技术之一，通过共享硬件平台、无线资源与信号处理模块，可显著提升频谱效率与系统效能，降低硬件成本。太赫兹（Terahertz, THz）频段（0.1~10~THz）拥有海量可用带宽，可支持100~Gbps以上的超高通信速率，同时其短波长特性可实现厘米级波束宽度，为高精度感知提供了物理基础，因此太赫兹通感一体化（THz-ISAC）成为近年来的研究热点。然而，THz-ISAC系统的实用化仍面临诸多挑战，本文提出了一种基于双深度Q网络（Double Deep Q-Network, DDQN）的THz-ISAC动态波束跟踪与功率分配联合优化算法，通过将优化问题建模为马尔可夫决策过程，设计了适配的状态与动作空间，采用DDQN算法实现动态环境下的联合优化。仿真结果表明，所提算法相比传统算法显著降低了波束失配率，提升了通感总效用，且能够适应高速移动场景。}\\
+\vspace{0.5em}
+\noindent {\xiaowu \textbf{关键词}：太赫兹；通感一体化；波束跟踪；功率分配；深度强化学习}\\
+\vspace{2em}
+
+% 英文标题和摘要
+\begin{center}
+    {\Large \textbf{Dynamic Beam Tracking and Power Allocation for Terahertz Integrated Sensing and Communication Systems}}\\
+    \vspace{1em}
+    {\large QIN Zheng$^{1}$}\\
+    \vspace{0.3em}
+    {\small （1. Chongqing University of Posts and Telecommunications, Chongqing 400065, China）}\\
+    \vspace{1em}
+\end{center}
+
+\noindent \textbf{Abstract}：The sixth-generation (6G) mobile communication network will realize the leap from "Internet of Everything" to "Intelligent Internet of Everything". In addition to traditional communication functions, it will also integrate high-precision sensing capabilities to support emerging application scenarios such as autonomous driving, digital twin, and industrial Internet of Things. Integrated Sensing and Communication (ISAC), as one of the core technologies of 6G, can significantly improve spectrum efficiency and system effectiveness, and reduce hardware costs by sharing hardware platforms, wireless resources, and signal processing modules. The terahertz (THz) frequency band (0.1~10~THz) has massive available bandwidth, which can support ultra-high communication rates above 100~Gbps. At the same time, its short wavelength characteristics can achieve centimeter-level beam width, providing a physical basis for high-precision sensing. Therefore, terahertz integrated sensing and communication (THz-ISAC) has become a research hotspot in recent years. However, the practical application of THz-ISAC systems still faces many challenges. This paper proposes a double deep Q-network (DDQN) based joint optimization algorithm for dynamic beam tracking and power allocation in THz-ISAC systems. By modeling the optimization problem as a Markov decision process, designing an appropriate state and action space, and adopting the DDQN algorithm to realize joint optimization in dynamic environments. Simulation results show that the proposed algorithm significantly reduces the beam mismatch rate, improves the total utility of sensing and communication, and can adapt to high-speed mobile scenarios compared with traditional algorithms.\\
+\vspace{0.5em}
+\noindent \textbf{Keywords}：terahertz; integrated sensing and communication; beam tracking; power allocation; deep reinforcement learning\\
+\vspace{2em}
+
+% 收稿日期、基金项目
+\noindent \textbf{收稿日期：}2024−03−15；\textbf{修回日期：}2024−06−20\\
+\noindent \textbf{基金项目：}国家自然科学基金资助项目（No.62271001, No.62001002）\\
+\noindent \textbf{Foundation Items:} The National Natural Science Foundation of China (No.62271001, No.62001002)\\
+\vspace{2em}
+
+\twocolumn
+
+% 允许公式跨页
+\allowdisplaybreaks
+
+% 调整表格与上下文的间距
+\setlength{\textfloatsep}{1em} % 表格与上下文的间距
+
+\section{引言}
+第六代移动通信（6G）网络将实现从「万物互联」到「万物智联」的跨越，除了传统通信功能外，还将集成高精度感知能力，支撑自动驾驶、数字孪生、工业物联网等新兴应用场景~\cite{ref1}。通感一体化（Integrated Sensing and Communication, ISAC）作为6G的核心技术之一，通过共享硬件平台、无线资源与信号处理模块，可显著提升频谱效率与系统效能，降低硬件成本~\cite{ref2}。太赫兹（Terahertz, THz）频段（0.1~10~THz）拥有海量可用带宽，可支持100~Gbps以上的超高通信速率，同时其短波长特性可实现厘米级波束宽度，为高精度感知提供了物理基础，因此太赫兹通感一体化（THz-ISAC）成为近年来的研究热点~\cite{ref3}。
+
+然而，THz-ISAC系统的实用化仍面临诸多挑战：一方面，太赫兹信号路径损耗极高，需采用大规模相控阵实现高增益波束成形，窄波束特性导致移动用户易脱离波束覆盖范围，引发波束失配，传统基于全向搜索或粒子滤波的波束跟踪算法未考虑感知功能的资源需求，且静态优化方法难以适应动态变化的信道环境~\cite{ref4}；另一方面，通信与感知功能共享时频与功率资源，需在保证感知精度约束的前提下最大化通信速率，现有研究多将波束跟踪与资源分配独立优化，未考虑二者的耦合关系，导致系统整体性能损失~\cite{ref5}。
+
+针对上述问题，本文提出了一种基于双深度Q网络（Double Deep Q-Network, DDQN）的THz-ISAC动态波束跟踪与功率分配联合优化算法，主要贡献如下：
+\begin{enumerate}
+\item 建立了THz-ISAC系统联合优化模型，将波束码本选择、通信-感知功率分配建模为马尔可夫决策过程，同时考虑波束切换开销与感知精度约束，实现通感加权总效用最大化；
+\item 设计了适用于动态移动场景的MDP状态与动作空间，采用DDQN解决传统强化学习的维数灾难问题，通过目标网络与经验回放机制提升算法训练稳定性与收敛速度；
+\item 仿真验证了所提算法在波束失配率、通感总效用、收敛速度等方面的性能优势，相比传统算法可适应更高速度的移动场景。
+\end{enumerate}
+
+本文后续内容安排如下：第二节介绍THz-ISAC系统模型与优化问题建模；第三节详细阐述基于DDQN的联合优化算法设计；第四节给出仿真参数设置与结果分析；第五节总结全文并展望未来研究方向。
+
+% 以下内容保持不变...

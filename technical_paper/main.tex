@@ -1,0 +1,125 @@
+% !TEX program = xelatex
+% 通信学报风格模板（通用版）
+\documentclass[twocolumn,a4paper,10pt]{ctexart}
+
+% 页面设置（符合通信学报要求）
+\usepackage[top=2.2cm,bottom=2.2cm,left=1.8cm,right=1.8cm]{geometry}
+\setlength{\columnsep}{0.8cm}
+
+% 字体与段落
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}[AutoFakeBold=true,AutoFakeSlant=true] % 宋体
+\setCJKsansfont{SimHei} % 黑体
+\setmainfont{Times New Roman}
+\linespread{1.2} % 1.2倍行距
+
+% 数学与图表
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{cite}
+
+% 标题格式
+\ctexset{
+  section = {
+    format = \heiti\zihao{4}\bfseries\raggedright,
+    beforeskip = 10pt,
+    afterskip = 5pt
+  },
+  subsection = {
+    format = \heiti\zihao{5}\bfseries,
+    beforeskip = 5pt,
+    afterskip = 3pt
+  }
+}
+
+% 摘要环境重定义
+\renewenvironment{abstract}{
+  \begin{center}
+  \begin{minipage}{0.9\linewidth}
+  \zihao{5}\kaishu
+  {\heiti\zihao{5} 摘\quad 要：}
+}{
+  \end{minipage}
+  \end{center}
+  \vspace{5pt}
+}
+
+% 关键词
+\newcommand{\keywords}[1]{
+  \noindent{\heiti\zihao{5} 关键词：}\zihao{5}\kaishu #1\par
+  \vspace{8pt}
+}
+
+% 作者信息
+\newcommand{\authorinfo}[2]{
+  \begin{center}
+    {\zihao{4}\fangsong #1}\\[3pt]
+    {\zihao{5}\songti (#2)}
+  \end{center}
+  \vspace{5pt}
+}
+
+% 中图分类号等
+\newcommand{\clc}[4]{
+  \noindent\zihao{6}\songti
+  中图分类号：#1 \quad 
+  文献标志码：#2 \quad 
+  文章编号：#3 \quad 
+  DOI：#4\par
+  \vspace{5pt}
+}
+
+% 标题和作者信息
+\title{技术论文示例：基于深度学习的通信优化}
+\author{张三, 李四, 王五}
+\date{2026年4月26日}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本文提出了一种基于深度学习的通信优化方法。通过实验验证，该方法在性能和效率上均优于传统方法。
+\end{abstract}
+
+\section{引言}
+近年来，深度学习在通信领域的应用受到了广泛关注。本文旨在探讨如何利用深度学习技术优化通信系统。
+
+\section{相关工作}
+在通信优化领域，传统方法主要包括基于规则的优化和启发式算法。然而，这些方法在复杂场景下的表现有限。
+
+\section{方法}
+本文提出了一种基于深度学习的通信优化框架。该框架包括以下几个模块：
+\begin{itemize}
+    \item 数据预处理：对原始通信数据进行清洗和特征提取；
+    \item 模型训练：使用深度神经网络对数据进行建模；
+    \item 性能评估：通过仿真实验验证模型的有效性。
+\end{itemize}
+
+\section{实验结果}
+实验结果表明，本文方法在吞吐量和延迟方面均优于基线方法。具体结果如表\ref{tab:results}所示。
+
+\begin{table}[ht]
+    \centering
+    \caption{实验结果对比}
+    \label{tab:results}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        方法 & 吞吐量 (Mbps) & 延迟 (ms) \\
+        \hline
+        基线方法 & 50 & 100 \\
+        \hline
+        本文方法 & 70 & 80 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{结论}
+本文提出了一种基于深度学习的通信优化方法，并通过实验验证了其有效性。未来工作将进一步优化模型结构，并探索更多应用场景。
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}

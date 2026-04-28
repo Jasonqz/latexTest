@@ -1,0 +1,103 @@
+% !TEX program = xelatex
+\documentclass[twocolumn]{ctexart}
+
+% ------------- 通信学报风格包 -------------
+\usepackage[top=2.5cm,bottom=2.5cm,left=2cm,right=2cm]{geometry}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black}
+
+% 标题、作者、摘要等自定义命令
+\newcommand\Title[1]{\begin{center}\LARGE\bfseries #1\end{center}}
+\newcommand\Author[1]{\begin{center}\large #1\end{center}}
+\newcommand\Abstract[1]{\textbf{\abstractname}：#1\par}
+\newcommand\Keywords[1]{\textbf{关键词}：#1\par}
+
+\begin{document}
+
+% ============ 标题 ============
+\Title{基于深度学习的OFDM信道估计方法研究}
+
+\Author{张三$^{1}$, 李四$^{2}$\\
+(1. XX大学 信息与通信工程学院, 北京 100000;\\
+2. YY大学 电子工程学院, 上海 200000)}
+
+\renewcommand{\abstractname}{摘\quad 要}
+\Abstract{针对传统OFDM信道估计方法在高移动性、低信噪比场景下性能下降的问题，本文提出一种基于卷积神经网络（CNN）的信道估计方法。该方法将导频位置的信道频域响应作为输入，利用CNN对信道时频相关性进行学习，直接恢复出完整信道矩阵。在3GPP TDL-A信道模型下的仿真结果表明，与MMSE估计相比，所提方法在归一化均方误差（NMSE）上降低约2 dB，且对导频数量不敏感，复杂度更适合实际部署。}
+
+\Keywords{OFDM；信道估计；深度学习；卷积神经网络；导频}
+
+% ============ 正文 ============
+\section{引言}
+
+正交频分复用（OFDM）是现代无线通信系统的核心技术之一。信道估计的准确性直接影响系统的解调性能。传统方法如最小二乘（LS）和最小均方误差（MMSE）估计依赖于信道的统计特性，在高移动性或低信噪比环境下性能显著下降\cite{1}。近年来，深度学习在物理层通信中的应用受到广泛关注，特别是利用神经网络直接从数据中学习信道特征\cite{2,3}。本文针对OFDM系统，设计了一种轻量级CNN网络，利用导频观测值估计完整信道响应，并在典型信道模型下验证其有效性。
+
+\section{系统模型与问题描述}
+
+考虑一个包含$N$个子载波的OFDM系统，其中$N_p$个导频均匀分布。接收到的频域信号可表示为：
+\begin{equation}
+\mathbf{Y} = \mathbf{H} \odot \mathbf{X} + \mathbf{N},
+\end{equation}
+其中$\mathbf{X}$、$\mathbf{H}$、$\mathbf{N}$分别表示发送符号、信道频域响应和加性高斯白噪声。信道估计的目标是从导频位置观测值$\mathbf{Y}_p$恢复出完整的$\mathbf{H}$。
+
+传统MMSE估计需要已知信道协方差矩阵，计算复杂且受限于统计先验。本文将信道估计视为一个图像超分辨率问题：将稀疏的导频观测值映射为密集的信道矩阵，利用CNN学习这种映射。
+
+\section{基于CNN的信道估计方法}
+
+\subsection{网络结构}
+
+所提CNN网络结构如图1所示。输入为导频位置的信道LS估计值，经过最近邻插值扩展为$N \times 1$的初步估计，再通过两个卷积层和一个全连接层输出最终的信道估计。具体参数为：第一卷积层使用32个3×1卷积核，第二层使用16个3×1卷积核，激活函数采用ReLU，输出层为线性全连接层。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\textwidth]{example-image}
+\caption{CNN信道估计网络结构}
+\label{fig:net}
+\end{figure}
+
+\subsection{训练过程}
+
+训练数据集由大量信道实现构成，每个样本为导频LS估计与真实信道的配对。损失函数采用均方误差（MSE）：
+\begin{equation}
+\mathcal{L} = \frac{1}{N_b}\sum_{i=1}^{N_b}\|\hat{\mathbf{H}}_i - \mathbf{H}_i\|_F^2,
+\end{equation}
+其中$N_b$为批量大小。使用Adam优化器，初始学习率0.001，训练轮数50。
+
+\section{仿真结果与分析}
+
+仿真参数：子载波数$N=128$，导频数$N_p=16$（均匀放置），CP长度16，信道为3GPP TDL-A 30 Hz多普勒。信噪比范围0~20 dB。比较方法包括LS、MMSE（已知信道协方差）以及所提CNN方法。
+
+图2给出了不同SNR下的归一化均方误差（NMSE）对比。可见所提CNN方法在低SNR（0~5 dB）时优于MMSE约2 dB，在10 dB以上接近MMSE性能，但无需信道统计信息。图3给出了导频数量为8、16、32时的性能，CNN方法对导频数量不敏感，特别适合导频资源受限场景。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\textwidth]{example-image}
+\caption{NMSE vs SNR}
+\label{fig:nmse}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\textwidth]{example-image}
+\caption{不同导频数下的NMSE（SNR=10 dB）}
+\label{fig:pilot}
+\end{figure}
+
+\section{结论}
+
+本文提出了一种基于CNN的OFDM信道估计方法，利用导频位置的LS估计直接恢复信道矩阵。仿真结果表明，该方法在低SNR和高移动性场景下性能优于MMSE，且无需信道先验信息，对导频数量不敏感。后续工作将考虑更复杂的信道模型（如双选择性）和端到端联合优化。
+
+\bibliographystyle{unsrt}
+\begin{thebibliography}{99}
+\bibitem{1} 张华, 李明. 移动通信信道估计技术综述[J]. 通信学报, 2019, 40(2): 1-15.
+\bibitem{2} Ye H, Li G Y, Juang B H. Power of deep learning for channel estimation and signal detection in OFDM systems[J]. IEEE Wireless Communications Letters, 2018, 7(1): 114-117.
+\bibitem{3} Wen C K, Shih W T, Jin S. Deep learning for massive MIMO CSI feedback[J]. IEEE Wireless Communications Letters, 2018, 7(5): 748-751.
+\end{thebibliography}
+
+\end{document}

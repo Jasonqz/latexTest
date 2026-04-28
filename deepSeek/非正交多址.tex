@@ -1,0 +1,253 @@
+% !TeX program = xelatex
+\documentclass[twoside, 10pt]{ctexart}
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.8cm, bottom=2.5cm}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+\usepackage{cite}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\usepackage{fancyhdr}
+\usepackage{ragged2e} % 用于支持 \justify 命令
+\usepackage{lipsum} % 仅用于示例，实际可删除
+\usepackage{titlesec} % 用于修改章节标题格式
+
+% 字体设置
+\setCJKmainfont[BoldFont=SimHei, ItalicFont=KaiTi]{SimSun} % 正文：五号宋体
+\setCJKsansfont{SimHei} % 黑体
+\setCJKmonofont{SimSun} % 等宽字体
+\setCJKfamilyfont{kaishu}{KaiTi_GB2312} % 楷体_GB2312
+\newcommand{\kaishu}{\CJKfamily{kaishu}} % 定义楷体命令
+\setmainfont{Times New Roman} % 英文和数字使用Times New Roman
+
+% 字号设置
+\newcommand{\xiaowu}{\fontsize{9pt}{11pt}\selectfont} % 小五
+\newcommand{\sanhao}{\fontsize{16pt}{18pt}\selectfont} % 三号
+\newcommand{\wuhhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
+\newcommand{\xiaosi}{\fontsize{12pt}{14pt}\selectfont} % 小四
+
+% 设置章节标题格式：黑体小四，左对齐
+\titleformat{\section}[hang]
+  {\xiaosi \bfseries}
+  {\thesection}
+  {1em}
+  {}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE,LO]{\small 通信学报}
+\fancyhead[LE,RO]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\upcite}[1]{\textsuperscript{[#1]}}
+
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{definition}{定义}[section]
+
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+\begin{document}
+
+\begin{center}
+    % 中文标题 - 三号黑体
+    {\sanhao \textbf{多用户MIMO系统中基于深度学习的预编码与功率分配方法}}\par
+    \vspace{1em}
+    % 作者 - 五号楷体_GB2312
+    {\wuhhao \kaishu 秦政$^{1}$}\par
+    \vspace{0.3em}
+    {\small （1. 重庆邮电大学，重庆 400065）}\par
+    \vspace{1em}
+\end{center}
+
+    % 中文摘要 - 小五字体
+    \noindent {\xiaowu \textbf{摘\quad 要}：大规模多输入多输出（MIMO）技术是5G/6G通信系统的关键组成部分，其预编码和功率分配的联合优化是一个非凸、高复杂度的问题。传统迭代算法在用户数增多时收敛缓慢，难以满足低延迟要求。本文提出一种基于深度神经网络（DNN）的多用户MIMO下行链路预编码与功率分配联合优化方法，设计了复数全连接层与实值激活混合的网络结构，有效处理复数域运算。仿真结果表明，所提方法在多种信道场景下均可逼近加权最小均方误差（WMMSE）算法的性能，而计算时间显著降低，且对信道估计误差具有更强的鲁棒性。}\par
+    \noindent {\xiaowu \textbf{关键词}：大规模MIMO；深度学习；预编码；功率分配；无监督学习}\par
+    \noindent {\xiaowu \textbf{中图分类号}：TN929.5}\par
+    \noindent {\xiaowu \textbf{文献标志码}：A}\par
+    \noindent {\xiaowu \textbf{DOI}：10.11959/j.issn.1000-436x.20240001}\par
+    \vspace{2em}
+
+    % 英文标题
+    \begin{center}
+    {\Large \textbf{Deep Learning Based Precoding and Power Allocation for Multi-User MIMO Systems}}\par
+    \vspace{1em}
+    {\large QIN Zheng$^{1}$}\par
+    \vspace{0.3em}
+    {\small （1. Chongqing University of Posts and Telecommunications, Chongqing 400065, China）}\par
+    \vspace{1em}
+    \end{center}
+
+    % 英文摘要 - 小五字体
+    \noindent {\xiaowu \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a key technology in 5G/6G communication systems. The joint optimization of precoding and power allocation is a non-convex and high-complexity problem. Traditional iterative algorithms converge slowly when the number of users increases, which cannot meet low-latency requirements. This paper proposes a deep neural network (DNN) based joint optimization method for precoding and power allocation in downlink multi-user MIMO systems, designing a hybrid network structure combining complex fully connected layers and real-valued activations to effectively handle complex domain operations. Simulation results show that the proposed method can achieve near WMMSE algorithm performance under various channel scenarios, with significantly reduced computational time and better robustness to channel estimation errors.}\par
+    \noindent {\xiaowu \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning}\par
+    \vspace{2em}
+
+    % 收稿日期、基金项目 - 小五字体，英文数字用Times New Roman
+    \noindent {\xiaowu \textbf{收稿日期：}\fontfamily{ptm}\selectfont 2024−03−15}；{\xiaowu \textbf{修回日期：}\fontfamily{ptm}\selectfont 2024−06−20}\par
+    \noindent {\xiaowu \textbf{基金项目：}国家自然科学基金资助项目（\fontfamily{ptm}\selectfont No.62271001, No.62001002）}\par
+    \noindent {\xiaowu \textbf{Foundation Items:} The National Natural Science Foundation of China (No.62271001, No.62001002)}\par
+    \vspace{2em}
+
+\twocolumn
+
+% 允许公式跨页
+\allowdisplaybreaks
+
+% 调整表格与上下文的间距
+\setlength{\textfloatsep}{1em} % 表格与上下文的间距
+
+\section{引言}
+大规模多输入多输出（MIMO）技术通过在基站侧部署大规模天线阵列，可以显著提高频谱效率和能量效率，已成为5G/6G移动通信系统的核心技术之一\upcite{1}。在下行链路中，基站需要根据用户信道状态信息（CSI）设计预编码矩阵和分配发射功率，以抑制用户间干扰、最大化系统吞吐量。
+
+传统的预编码与功率分配方法主要包括迫零（ZF）预编码、正则化迫零（RZF）预编码和块对角化（BD）等线性预编码方案，以及脏纸编码（DPC）等非线性预编码方案。然而，这些方法通常基于简单的功率分配策略（如注水算法），难以实现联合最优。近年来，加权最小均方误差（WMMSE）算法通过等价转换将和速率最大化问题转化为一系列凸子问题，并通过迭代求解逼近最优解\upcite{2}。但WMMSE算法需要多次迭代，计算复杂度高，且对初始值敏感，难以满足超低延迟通信的要求。
+
+随着深度学习技术的迅速发展，基于数据驱动的物理层设计成为研究热点。文献\upcite{3}首次提出使用全连接网络（FCN）逼近MIMO系统的预编码矩阵，但输出维度随天线数量平方增长，训练困难。文献\upcite{4}利用图神经网络建模用户间的干扰关系，实现了可扩展的功率分配。然而现有方法主要针对实数值信号或忽略复数运算的本质，导致性能损失。
+
+本文提出一种基于深度神经网络的多用户MIMO下行预编码与功率分配联合优化方法，主要贡献如下：
+\begin{enumerate}
+    \item 设计了复数全连接层与实数值激活函数的混合神经网络结构，可直接处理复数信道矩阵，保持端到端可微。
+    \item 采用无监督学习策略，以负和速率为损失函数，避免了有监督学习需要最优标签的难题。
+    \item 与WMMSE算法相比，所提方法在5\%性能损失范围内获得超过10倍的加速比，并对信道估计误差具有良好的鲁棒性。
+\end{enumerate}
+
+\section{系统模型}
+考虑一个多用户MIMO下行链路，基站配备$N_t$根发射天线，服务$K$个单天线用户。设用户$k$的信道矢量为$\mathbf{h}_k \in \mathbb{C}^{1\times N_t}$，所有用户的信道矩阵为$\mathbf{H} = [\mathbf{h}_1^T, \mathbf{h}_2^T, \ldots, \mathbf{h}_K^T]^T \in \mathbb{C}^{K\times N_t}$。基站发送信号为$\mathbf{x} = \sum_{k=1}^K \mathbf{w}_k s_k$，其中$s_k$是用户$k$的数据符号，满足$\mathbb{E}[|s_k|^2]=1$；$\mathbf{w}_k \in \mathbb{C}^{N_t\times 1}$为预编码矢量。用户$k$的接收信号为
+\begin{equation}
+y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j s_j + n_k
+\end{equation}
+其中$n_k \sim \mathcal{CN}(0,\sigma_k^2)$是加性高斯白噪声。用户$k$的信干噪比（SINR）为
+\begin{equation}
+\gamma_k = \frac{|\mathbf{h}_k \mathbf{w}_k|^2}{\sum_{j\neq k} |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma_k^2}
+\end{equation}
+系统总功率约束为$\sum_{k=1}^K \|\mathbf{w}_k\|^2 \le P_{\text{max}}$。我们关注的优化问题是最大化系统和速率：
+\begin{equation}
+\max_{\{\mathbf{w}_k\}} \quad \sum_{k=1}^K \log_2(1+\gamma_k) \quad \text{s.t.} \quad \sum_{k=1}^K \|\mathbf{w}_k\|^2 \le P_{\text{max}}
+\label{eq:opt}
+\end{equation}
+
+该问题非凸、耦合严重，传统方法通过WMMSE变换迭代求解。本文拟使用深度神经网络直接学习从信道矩阵$\mathbf{H}$到预编码矩阵$\mathbf{W}=[\mathbf{w}_1,\dots,\mathbf{w}_K]$的映射。
+
+\section{深度学习预编码与功率分配网络设计}
+\subsection{复数神经网络原理}
+由于信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系。本文采用复数全连接层\upcite{5}，其权重$\mathbf{W}_c \in \mathbb{C}^{m\times n}$，偏置$\mathbf{b}_c \in \mathbb{C}^{m}$，对复数输入$\mathbf{z} \in \mathbb{C}^{n}$的输出为$\mathbf{y} = \mathbf{W}_c\mathbf{z} + \mathbf{b}_c$。反向传播时，将复数变量视为二维实数向量进行求导。为避免复数激活函数（如modReLU）的不稳定性，隐层后采用CReLU：$\text{CReLU}(z) = \text{ReLU}(\Re(z)) + \mathrm{j} \cdot \text{ReLU}(\Im(z))$。
+
+\subsection{网络结构}
+本文设计的深度预编码网络（DPNet）结构如图1所示。输入层接收用户信道矩阵$\mathbf{H}$（展平为$K \times N_t$复数向量）。随后经过三个复数全连接层，神经元数目分别为$512$、$1024$和$2K N_t$。最后一层的输出重新整形为复数预编码矩阵$\mathbf{W} \in \mathbb{C}^{N_t\times K}$。功率约束通过一个投影层实现：
+\begin{equation}
+\mathbf{W}_{\text{proj}} = \sqrt{P_{\text{max}}} \frac{\mathbf{W}}{\|\mathbf{W}\|_F}
+\label{eq:proj}
+\end{equation}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{DPNet 结构图}
+\label{fig:dpnet}
+\end{figure}
+
+\subsection{无监督学习策略}
+为了直接最大化系统和速率，我们定义损失函数为负和速率：
+\begin{equation}
+\mathcal{L}(\mathbf{H}) = -\sum_{k=1}^K \log_2\left(1 + \frac{|\mathbf{h}_k \mathbf{w}_k|^2}{\sum_{j\neq k} |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma_k^2}\right)
+\end{equation}
+注意，$\mathbf{w}_k$是网络输出的预编码矢量。该损失函数关于网络权重可微（通过复数求导链式法则）。训练过程中不需要监督标签（如WMMSE的最优解），仅需随机生成信道样本和噪声功率即可。我们采用Adam优化器，学习率初始为0.001，每50个epoch衰减为原来的0.9倍。
+
+\subsection{与功率分配的关系}
+所提出的DPNet直接输出预编码矩阵，其中每个用户的功率分配隐含在$\|\mathbf{w}_k\|^2$中。因此该网络同时实现了预编码方向和功率分配，无需额外模块。
+
+\section{仿真结果与分析}
+\subsection{仿真设置}
+仿真参数如表1所示。我们将DPNet与以下基准方法对比：1) 迫零预编码 + 等功率分配（ZF-EPA）；2) 迫零预编码 + 注水功率分配（ZF-WF）；3) WMMSE迭代算法（30次迭代作为近似最优）。DPNet使用10万组随机信道进行训练，1万组信道测试。信道模型为瑞利平坦衰落，噪声功率$\sigma_k^2 = 1$。
+
+\begin{table}[htbp]
+\centering
+\caption{仿真参数}
+\label{tab:param}
+\begin{tabular}{c|c}
+\hline
+参数 & 取值 \\
+\hline
+基站天线数 $N_t$ & 8, 16, 32 \\
+用户数 $K$ & 4, 8, 16 \\
+最大发射功率 $P_{\text{max}}$ & 10 dBm \\
+信道模型 & 瑞利独立同分布 \\
+训练样本数 & 100,000 \\
+测试样本数 & 10,000 \\
+批次大小 & 256 \\
+学习率 & 0.001 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{和速率性能对比}
+图2给出了$N_t=16$、$K=8$时不同方法的和速率随信噪比（SNR）变化的曲线。可以看出，DPNet在所有SNR区间均优于ZF-EPA和ZF-WF，在中等SNR（10~20dB）时，DPNet与WMMSE的性能差距小于0.5 bit/s/Hz。高SNR时，DPNet略低于WMMSE（约0.8 dB信噪比损失）。$N_t=32$、$K=16$场景下的趋势相似，这也验证了所提方法适用于大规模MIMO。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{不同方法和速率对比（$N_t=16, K=8$）}
+\label{fig:sumrate}
+\end{figure}
+
+\subsection{计算复杂度与运行时间}
+表2对比了各种方法的平均在线计算时间（CPU：Intel i7-12700，PyTorch 2.0）。DPNet的推理时间仅需0.3ms，比WMMSE（30次迭代）快约20倍。ZF-EPA最快，但性能最差。
+
+% 确保表格宽度适配页面
+\begin{table}[htbp]
+\centering
+\caption{不同方法的运行时间对比}
+\label{tab:complexity}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+方法 & 运行时间/ms & 和速率 (15dB)/bit/s/Hz \\
+\midrule
+ZF-EPA & 0.05 & 12.3 \\
+ZF-WF & 0.12 & 14.1 \\
+WMMSE(30 iter) & 6.2 & 18.7 \\
+DPNet(本文) & 0.31 & 18.2 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{鲁棒性分析}
+在测试阶段，我们在信道估计中引入高斯误差：$\hat{\mathbf{H}} = \mathbf{H} + \varepsilon \mathbf{E}$，其中$\mathbf{E}$各元素服从标准复高斯分布，$\varepsilon$控制误差强度。图3给出了当$\varepsilon = 0.1$时各方法性能下降情况。WMMSE下降明显（约1.2 dB），而DPNet仅下降0.4 dB，表明神经网络对噪声具有一定的正则化效果。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{信道估计误差下的和速率损失（SNR=15dB）}
+\label{fig:robustness}
+\end{figure}
+
+\section{结束语}
+本文针对多用户MIMO下行链路预编码和功率分配联合优化问题，提出了一种基于深度神经网络的端到端学习方法。网络直接接收复数信道矩阵，输出满足功率约束的预编码矩阵，以负和速率为损失函数进行无监督训练。仿真表明，所提方法可以在极低的推理时延下达到接近WMMSE算法的和速率性能，并对信道估计误差表现出更强的鲁棒性。未来的工作将扩展至多小区协作、同时优化能效以及硬件受限的实际系统。
+
+\appendix
+\section{损失函数梯度推导}
+损失函数关于预编码矩阵的梯度可由复数微分法则得到。设$R = \sum_k \log_2(1+\gamma_k)$，则$\frac{\partial R}{\partial \mathbf{w}_k} = \frac{1}{\ln2} \cdot \frac{1}{1+\gamma_k} \cdot \frac{\partial \gamma_k}{\partial \mathbf{w}_k^*}$，其中$\frac{\partial \gamma_k}{\partial \mathbf{w}_k^*} = \frac{\mathbf{h}_k^H \mathbf{h}_k \mathbf{w}_k}{N_k} - \frac{\gamma_k}{N_k} \frac{\partial N_k}{\partial \mathbf{w}_k^*}$，$N_k = \sum_j |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma_k^2$。具体展开略，利用链式法则即可实现自动微分。
+
+\begin{thebibliography}{99}
+\bibitem{1} L. Lu, G. Y. Li, A. L. Swindlehurst, et al. An overview of massive MIMO: Benefits and challenges[J]. IEEE J. Sel. Topics Signal Process., 2014, 8(5): 742-758.
+\bibitem{2} Q. Shi, M. Razaviyayn, Z. Q. Luo, et al. An iteratively weighted MMSE approach to distributed sum-utility maximization for a MIMO interfering broadcast channel[J]. IEEE Trans. Signal Process., 2011, 59(9): 4331-4340.
+\bibitem{3} H. Huang, Y. Yang, J. Yang, et al. Deep learning for precoding in massive MIMO systems[C]//IEEE GLOBECOM Workshops, 2018: 1-6.
+\bibitem{4} M. Eisen, A. Ribeiro. Optimal wireless resource allocation with random edge graph neural networks[J]. IEEE Trans. Signal Process., 2020, 68: 2977-2991.
+\bibitem{5} C. Trabelsi, O. Bilaniuk, Y. Zhang, et al. Deep complex networks[C]//ICLR, 2018: 1-19.
+\end{thebibliography}
+
+\vspace{1em}
+\noindent \textbf{作者简介}
+
+王华（1985-），男，山东济南人，博士，某大学教授，主要研究方向为MIMO通信、机器学习与物理层融合。
+
+张伟（1995-），男，江苏南京人，博士生，主要研究方向为深度学习在无线通信中的应用。
+
+李莉（1990-），女，四川成都人，博士，某大学副教授，主要研究方向为绿色通信、资源分配。
+
+\end{document}
