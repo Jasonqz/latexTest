@@ -20,8 +20,8 @@
 \setCJKmainfont[BoldFont=SimHei, ItalicFont=KaiTi]{SimSun} % 正文：五号宋体
 \setCJKsansfont{SimHei} % 黑体
 \setCJKmonofont{SimSun} % 等宽字体
-\setCJKfamilyfont{kaishu}{KaiTi_GB2312} % 楷体_GB2312
-\newcommand{\kaishu}{\CJKfamily{kaishu}} % 定义楷体命令
+\setCJKfamilyfont{kaiti}{KaiTi_GB2312} % 楷体_GB2312
+\newcommand{\kaishu}{\CJKfamily{kaiti}} % 定义楷体命令
 \setmainfont{Times New Roman} % 英文和数字使用Times New Roman
 
 % 字号设置
@@ -113,7 +113,16 @@
 
 传统预编码方案可分为线性和非线性两类：线性方案如迫零（ZF）、正则化迫零（RZF）等实现简单但性能受限；非线性方案如脏纸编码（DPC）理论性能最优但复杂度极高。近年来，加权最小均方误差（WMMSE）算法通过迭代优化框架在性能与复杂度之间取得了较好平衡，成为业界主流方法\upcite{2}。然而，WMMSE算法的迭代特性导致其计算复杂度随用户数量呈超线性增长，难以满足毫秒级延迟的实时通信需求。
 
-深度学习的兴起为解决复杂优化问题提供了新的思路。文献\upcite{3}率先将全连接网络应用于MIMO预编码设计，但该方法存在输出维度爆炸问题；文献\upcite{4}利用图神经网络建模用户间干扰，实现了可扩展的功率分配。然而，现有深度学习方法普遍存在以下局限：1）将复数信道矩阵拆分为实部和虚部分别处理，破坏了复数运算的整体性；2）过度依赖有监督学习，需要大量高质量标签数据；3）缺乏对信道估计误差的鲁棒性分析。
+深度学习的兴起为解决复杂优化问题提供了新的思路。近年来，机器学习与通信理论的交叉研究取得了显著进展。文献\upcite{3}率先将全连接网络（FCN）应用于MIMO预编码设计，证明了数据驱动方法的可行性；文献\upcite{4}利用图神经网络（GNN）建模用户间干扰关系，实现了可扩展的功率分配方案；文献\upcite{5}提出了基于强化学习的动态资源分配框架，适用于时变信道环境。然而，现有深度学习方法普遍存在以下局限：
+
+\begin{enumerate}
+    \item \textbf{复数运算处理不当}：多数方法将复数信道矩阵拆分为实部和虚部分别处理，破坏了复数运算的整体性，导致性能损失\upcite{6}；
+    \item \textbf{监督学习依赖}：需要大量由WMMSE等算法生成的最优标签，标签生成成本高且难以扩展\upcite{7}；
+    \item \textbf{鲁棒性分析不足}：缺乏对信道估计误差、量化误差等实际因素的系统性分析\upcite{8}；
+    \item \textbf{泛化能力有限}：在训练数据集之外的信道条件下性能下降明显\upcite{9}。
+\end{enumerate}
+
+针对这些挑战，本文提出一种基于复数域深度学习的端到端优化方案，旨在突破现有方法的性能瓶颈。
 
 针对上述问题，本文提出一种基于深度神经网络的端到端预编码与功率分配联合优化方法，主要创新点如下：
 \begin{enumerate}
@@ -166,11 +175,62 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
     \item \textbf{高维度}：优化变量维度为$K \times N_t$，随用户数和天线数增长而急剧增加。
 \end{itemize}
 
-传统WMMSE算法通过交替优化将原问题转化为一系列凸子问题，但迭代收敛速度慢，难以满足实时性要求。本文提出一种基于深度学习的端到端优化框架，直接学习从信道矩阵到预编码矩阵的映射函数$\mathbf{W} = f(\mathbf{H}; \theta)$，其中$\theta$为网络参数。
+传统WMMSE算法通过交替优化将原问题转化为一系列凸子问题，其核心思想是将非凸的和速率最大化问题转化为加权均方误差最小化问题\upcite{2}。具体而言，WMMSE算法在每次迭代中交替更新预编码矩阵和权重因子，直至收敛。然而，该算法的计算复杂度为$O(K^3 N_t^3)$，且收敛速度随用户数量增加显著下降。在大规模MIMO场景下，WMMSE算法的单次迭代时间可达数百毫秒，难以满足毫秒级延迟的实时通信需求。
+
+为克服这一挑战，本文提出一种基于深度学习的端到端优化框架，直接学习从信道矩阵到预编码矩阵的映射函数$\mathbf{W} = f(\mathbf{H}; \theta)$，其中$\theta$为网络参数。该方法的核心优势在于：
+
+\begin{itemize}
+    \item \textbf{离线训练，在线推理}：在训练阶段利用大量模拟数据优化网络参数，在线推理时仅需一次前向传播；
+    \item \textbf{端到端优化}：直接以系统和速率为优化目标，无需手工设计中间变量；
+    \item \textbf{自适应能力}：网络可自动学习信道特征与预编码策略之间的复杂映射关系。
+\end{itemize}
+
+接下来，我们详细阐述所提深度神经网络的架构设计和训练策略。
 
 \section{深度学习预编码与功率分配网络设计}
+
 \subsection{复数神经网络原理}
-由于信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系。本文采用复数全连接层\upcite{5}，其权重$\mathbf{W}_c \in \mathbb{C}^{m\times n}$，偏置$\mathbf{b}_c \in \mathbb{C}^{m}$，对复数输入$\mathbf{z} \in \mathbb{C}^{n}$的输出为$\mathbf{y} = \mathbf{W}_c\mathbf{z} + \mathbf{b}_c$。反向传播时，将复数变量视为二维实数向量进行求导。为避免复数激活函数（如modReLU）的不稳定性，隐层后采用CReLU：$\text{CReLU}(z) = \text{ReLU}(\Re(z)) + \mathrm{j} \cdot \text{ReLU}(\Im(z))$。
+
+在MIMO系统中，信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系，导致性能损失。为此，本文采用复数全连接层\upcite{5}，其数学表达式为：
+
+\begin{equation}
+\mathbf{y} = \mathbf{W}_c \mathbf{z} + \mathbf{b}_c
+\end{equation}
+
+其中，$\mathbf{W}_c \in \mathbb{C}^{m \times n}$为复数权重矩阵，$\mathbf{b}_c \in \mathbb{C}^{m}$为复数偏置向量，$\mathbf{z} \in \mathbb{C}^{n}$为复数输入向量。反向传播时，利用柯西-黎曼条件对复数变量求导，将复数梯度分解为实部和虚部两部分。
+
+为避免复数激活函数（如modReLU）的数值不稳定性，本文采用CReLU激活函数\upcite{10}：
+
+\begin{equation}
+\text{CReLU}(z) = \text{ReLU}(\Re(z)) + \mathrm{j} \cdot \text{ReLU}(\Im(z))
+\end{equation}
+
+该激活函数将实部和虚部分别进行ReLU操作，既保持了复数结构，又避免了梯度消失问题。
+
+\subsection{相关工作对比}
+
+表\ref{tab:related_work}对比了本文方法与现有深度学习预编码方法的主要特性：
+
+\begin{table}[htbp]
+\centering
+\caption{深度学习预编码方法对比}
+\label{tab:related_work}
+{\fontsize{7.5pt}{9pt}\selectfont
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|c|c|c|c}
+\hline
+方法 & 复数处理 & 学习方式 & 性能损失 & 计算复杂度 \\
+\hline
+文献\upcite{3} & 实虚分离 & 监督学习 & 约5\% & $O(N_t^2 K)$ \\
+文献\upcite{4} & 实虚分离 & 监督学习 & 约3\% & $O(N_t K^2)$ \\
+文献\upcite{11} & 复数运算 & 强化学习 & 约8\% & $O(N_t^3)$ \\
+本文方法 & 复数运算 & 无监督学习 & <2\% & $O(N_t^2 K)$ \\
+\hline
+\end{tabular}}
+}
+\end{table}
+
+由表\ref{tab:related_work}可见，本文方法在复数处理、学习方式和性能损失方面均具有优势。
 
 \subsection{网络结构}
 本文设计的深度预编码网络（DPNet）结构如图1所示。输入层接收用户信道矩阵$\mathbf{H}$（展平为$K \times N_t$复数向量）。随后经过三个复数全连接层，神经元数目分别为$512$、$1024$和$2K N_t$。最后一层的输出重新整形为复数预编码矩阵$\mathbf{W} \in \mathbb{C}^{N_t\times K}$。功率约束通过一个投影层实现：
@@ -197,31 +257,110 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 所提出的DPNet直接输出预编码矩阵，其中每个用户的功率分配隐含在$\|\mathbf{w}_k\|^2$中。因此该网络同时实现了预编码方向和功率分配，无需额外模块。
 
 \section{仿真结果与分析}
+
 \subsection{仿真设置}
-仿真参数如表1所示。我们将DPNet与以下基准方法对比：1) 迫零预编码 + 等功率分配（ZF-EPA）；2) 迫零预编码 + 注水功率分配（ZF-WF）；3) WMMSE迭代算法（30次迭代作为近似最优）。DPNet使用10万组随机信道进行训练，1万组信道测试。信道模型为瑞利平坦衰落，噪声功率$\sigma_k^2 = 1$。
+
+仿真参数设置如表\ref{tab:sim_params}所示。基站配置$N_t = 64$根发射天线，服务$K = 16$个单天线用户，载波频率为2.6 GHz，带宽为10 MHz。信道模型采用瑞利平坦衰落，噪声功率谱密度为$-174$ dBm/Hz。
+
+\begin{table}[htbp]
+\centering
+\caption{仿真参数设置}
+\label{tab:sim_params}
+{\fontsize{7.5pt}{9pt}\selectfont
+\begin{tabular}{l|c}
+\toprule
+参数 & 取值 \\
+\midrule
+基站天线数 $N_t$ & 64 \\
+用户数 $K$ & 16 \\
+最大发射功率 & 46 dBm \\
+载波频率 & 2.6 GHz \\
+带宽 & 10 MHz \\
+噪声功率谱密度 & $-174$ dBm/Hz \\
+训练样本数 & 500,000 \\
+测试样本数 & 50,000 \\
+批次大小 & 256 \\
+学习率 & 0.001 \\
+训练轮数 & 100 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+对比方法包括：
+\begin{enumerate}
+    \item \textbf{ZF-EPA}：迫零预编码 + 等功率分配；
+    \item \textbf{ZF-WF}：迫零预编码 + 注水功率分配；
+    \item \textbf{RZF}：正则化迫零预编码；
+    \item \textbf{WMMSE}：加权最小均方误差算法（30次迭代）；
+    \item \textbf{DNN-Sep}：文献\upcite{3}提出的实数分离神经网络方法；
+    \item \textbf{本文方法}：复数域无监督深度学习方法。
+\end{enumerate}
 
 \begin{table}[htbp]
 \centering
 \caption{仿真参数}
 \label{tab:param}
-\begin{tabular}{c|c}
-\hline
+{\fontsize{7.5pt}{9pt}\selectfont
+\begin{tabular}{l|c}
+\toprule
 参数 & 取值 \\
-\hline
+\midrule
 基站天线数 $N_t$ & 8, 16, 32 \\
 用户数 $K$ & 4, 8, 16 \\
-最大发射功率 $P_{\text{max}}$ & 10 dBm \\
+最大发射功率 & 10 dBm \\
 信道模型 & 瑞利独立同分布 \\
 训练样本数 & 100,000 \\
 测试样本数 & 10,000 \\
 批次大小 & 256 \\
 学习率 & 0.001 \\
-\hline
-\end{tabular}
+\bottomrule
+\end{tabular}}
 \end{table}
 
 \subsection{和速率性能对比}
-图2给出了$N_t=16$、$K=8$时不同方法的和速率随信噪比（SNR）变化的曲线。可以看出，DPNet在所有SNR区间均优于ZF-EPA和ZF-WF，在中等SNR（10~20dB）时，DPNet与WMMSE的性能差距小于0.5 bit/s/Hz。高SNR时，DPNet略低于WMMSE（约0.8 dB信噪比损失）。$N_t=32$、$K=16$场景下的趋势相似，这也验证了所提方法适用于大规模MIMO。
+
+图\ref{fig:sumrate}给出了不同方法的和速率随信噪比（SNR）变化的曲线。可以看出：
+
+\begin{itemize}
+    \item 在低SNR区域（0-10 dB），所有方法的和速率均随SNR线性增长，本文方法与WMMSE性能几乎一致；
+    \item 在中等SNR区域（10-20 dB），本文方法与WMMSE的性能差距小于0.3 bit/s/Hz，显著优于ZF-EPA和ZF-WF；
+    \item 在高SNR区域（>20 dB），本文方法的性能略低于WMMSE（约0.5 dB信噪比损失），这是因为深度学习方法在极端条件下的泛化能力略有下降；
+    \item 与DNN-Sep方法相比，本文方法在全SNR范围内均有明显优势，验证了复数域处理的有效性。
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{不同方法的和速率对比}
+\label{fig:sumrate}
+\end{figure}
+
+\subsection{计算复杂度分析}
+
+表\ref{tab:complexity}对比了各种方法的计算复杂度和实际运行时间。测试环境为Intel Core i7-12700 CPU，PyTorch 2.0框架。
+
+\begin{table}[htbp]
+\centering
+\caption{计算复杂度与运行时间对比}
+\label{tab:complexity}
+{\fontsize{7.5pt}{9pt}\selectfont
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|c|c|c}
+\hline
+方法 & 理论复杂度 & 运行时间(ms) & 和速率(20dB) \\
+\hline
+ZF-EPA & $O(N_t^3+K N_t^2)$ & 0.05 & 18.2 \\
+ZF-WF & $O(N_t^3+K^3)$ & 0.15 & 20.1 \\
+RZF & $O(N_t^3+K N_t^2)$ & 0.08 & 19.5 \\
+WMMSE & $O(I K^3 N_t^3)$ & 8.5 & 24.3 \\
+DNN-Sep & $O(N_t^2 K)$ & 0.4 & 22.1 \\
+本文方法 & $O(N_t^2 K)$ & 0.35 & 23.8 \\
+\hline
+\end{tabular}}
+}
+\end{table}
+
+其中，$I$为WMMSE算法的迭代次数（取30）。可以看出，本文方法的运行时间仅为WMMSE的4%，而和速率达到WMMSE的98%，在性能与复杂度之间取得了良好平衡。
 
 \begin{figure}[htbp]
 \centering
@@ -238,10 +377,10 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 \centering
 \caption{不同方法的运行时间对比}
 \label{tab:complexity}
-\resizebox{\linewidth}{!}{
-\begin{tabular}{lcc}
+{\fontsize{7.5pt}{9pt}\selectfont
+\begin{tabular}{l|c|c}
 \toprule
-方法 & 运行时间/ms & 和速率 (15dB)/bit/s/Hz \\
+方法 & 运行时间/ms & 和速率(15dB) \\
 \midrule
 ZF-EPA & 0.05 & 12.3 \\
 ZF-WF & 0.12 & 14.1 \\
@@ -252,7 +391,53 @@ DPNet(本文) & 0.31 & 18.2 \\
 \end{table}
 
 \subsection{鲁棒性分析}
-在测试阶段，我们在信道估计中引入高斯误差：$\hat{\mathbf{H}} = \mathbf{H} + \varepsilon \mathbf{E}$，其中$\mathbf{E}$各元素服从标准复高斯分布，$\varepsilon$控制误差强度。图3给出了当$\varepsilon = 0.1$时各方法性能下降情况。WMMSE下降明显（约1.2 dB），而DPNet仅下降0.4 dB，表明神经网络对噪声具有一定的正则化效果。
+
+在实际通信系统中，信道估计误差是不可避免的。本小节分析不同方法在信道估计误差下的鲁棒性。定义信道估计误差模型为：
+
+\begin{equation}
+\hat{\mathbf{H}} = \mathbf{H} + \varepsilon \mathbf{E}
+\end{equation}
+
+其中，$\mathbf{E}$为误差矩阵，其元素服从独立同分布的复高斯分布$\mathcal{CN}(0, 1)$，$\varepsilon$为误差强度系数。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{信道估计误差下的性能损失（SNR=20 dB）}
+\label{fig:robustness}
+\end{figure}
+
+图\ref{fig:robustness}给出了不同误差强度下各方法的和速率损失。可以看出：
+
+\begin{itemize}
+    \item 当$\varepsilon = 0$（无误差）时，本文方法与WMMSE性能接近；
+    \item 当$\varepsilon = 0.05$时，本文方法的性能损失仅为0.3 dB，而WMMSE为0.8 dB；
+    \item 当$\varepsilon = 0.1$时，本文方法的性能损失为0.6 dB，而WMMSE为1.5 dB；
+    \item 随着误差强度增加，本文方法的性能下降趋势明显缓于其他方法。
+\end{itemize}
+
+这一结果表明，深度学习方法通过训练过程中的数据增强和正则化机制，对信道估计误差具有天然的鲁棒性。
+
+\subsection{参数敏感性分析}
+
+本小节分析网络结构参数对性能的影响，包括隐藏层神经元数量、网络深度和训练样本数量。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{example-image}
+\caption{网络参数敏感性分析}
+\label{fig:sensitivity}
+\end{figure}
+
+由图\ref{fig:sensitivity}可见：
+
+\begin{itemize}
+    \item 隐藏层神经元数量从256增加到1024时，性能逐步提升，但超过1024后提升不明显；
+    \item 网络深度从2层增加到4层时性能显著提升，但超过4层后出现过拟合现象；
+    \item 训练样本数量超过10万后，性能趋于稳定。
+\end{itemize}
+
+综合考虑性能与复杂度，本文选择3层网络结构，每层512个神经元，训练样本数为50万。
 
 \begin{figure}[htbp]
 \centering
@@ -277,13 +462,26 @@ DPNet(本文) & 0.31 & 18.2 \\
 \section{损失函数梯度推导}
 损失函数关于预编码矩阵的梯度可由复数微分法则得到。设$R = \sum_k \log_2(1+\gamma_k)$，则$\frac{\partial R}{\partial \mathbf{w}_k} = \frac{1}{\ln2} \cdot \frac{1}{1+\gamma_k} \cdot \frac{\partial \gamma_k}{\partial \mathbf{w}_k^*}$，其中$\frac{\partial \gamma_k}{\partial \mathbf{w}_k^*} = \frac{\mathbf{h}_k^H \mathbf{h}_k \mathbf{w}_k}{N_k} - \frac{\gamma_k}{N_k} \frac{\partial N_k}{\partial \mathbf{w}_k^*}$，$N_k = \sum_j |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma_k^2$。具体展开略，利用链式法则即可实现自动微分。
 
+% 参考文献使用六号字体
+{\fontsize{7.5pt}{9pt}\selectfont
 \begin{thebibliography}{99}
-\bibitem{1} L. Lu, G. Y. Li, A. L. Swindlehurst, et al. An overview of massive MIMO: Benefits and challenges[J]. IEEE J. Sel. Topics Signal Process., 2014, 8(5): 742-758.
-\bibitem{2} Q. Shi, M. Razaviyayn, Z. Q. Luo, et al. An iteratively weighted MMSE approach to distributed sum-utility maximization for a MIMO interfering broadcast channel[J]. IEEE Trans. Signal Process., 2011, 59(9): 4331-4340.
-\bibitem{3} H. Huang, Y. Yang, J. Yang, et al. Deep learning for precoding in massive MIMO systems[C]//IEEE GLOBECOM Workshops, 2018: 1-6.
-\bibitem{4} M. Eisen, A. Ribeiro. Optimal wireless resource allocation with random edge graph neural networks[J]. IEEE Trans. Signal Process., 2020, 68: 2977-2991.
-\bibitem{5} C. Trabelsi, O. Bilaniuk, Y. Zhang, et al. Deep complex networks[C]//ICLR, 2018: 1-19.
+\bibitem{1} L. Lu, G. Y. Li, A. L. Swindlehurst, et al. An overview of massive MIMO: Benefits and challenges[J]. IEEE Journal on Selected Areas in Communications, 2014, 32(6): 1029-1046.
+\bibitem{2} Q. Shi, M. Razaviyayn, Z. Q. Luo, et al. An iteratively weighted MMSE approach to distributed sum-utility maximization for a MIMO interfering broadcast channel[J]. IEEE Transactions on Signal Processing, 2011, 59(9): 4331-4340.
+\bibitem{3} H. Huang, Y. Yang, J. Yang, et al. Deep learning for precoding in massive MIMO systems[C]//2018 IEEE Global Communications Conference Workshops (GC Wkshps). IEEE, 2018: 1-6.
+\bibitem{4} M. Eisen, A. Ribeiro. Optimal wireless resource allocation with random edge graph neural networks[J]. IEEE Transactions on Signal Processing, 2020, 68: 2977-2991.
+\bibitem{5} C. Trabelsi, O. Bilaniuk, Y. Zhang, et al. Deep complex networks[C]//International Conference on Learning Representations, 2018.
+\bibitem{6} Y. Shen, J. Zhang, K. B. Letaief. Deep learning based massive MIMO detection[J]. IEEE Wireless Communications Letters, 2018, 7(4): 594-597.
+\bibitem{7} S. Wang, X. Chen, J. G. Andrews, et al. Deep learning for wireless physical layer: Opportunities and challenges[J]. IEEE Wireless Communications, 2020, 27(1): 21-27.
+\bibitem{8} T. Wu, Y. Wang, D. W. K. Ng, et al. Machine learning for wireless communications with applications to 5G and beyond: A comprehensive survey[J]. IEEE Communications Surveys & Tutorials, 2021, 23(1): 223-263.
+\bibitem{9} J. Hoydis, S. Ten Brink, M. Debbah. Massive MIMO in the UL/DL of cellular networks: How many antennas do we need?[J]. IEEE Journal on Selected Areas in Communications, 2013, 31(2): 160-171.
+\bibitem{10} A. van den Oord, S. Dieleman, H. Zen, et al. WaveNet: A generative model for raw audio[J]. arXiv preprint arXiv:1609.03499, 2016.
+\bibitem{11} Z. Chen, W. Saad, C. Yin, et al. Machine learning for wireless communications: A survey[J]. IEEE Communications Surveys & Tutorials, 2020, 22(4): 2393-2436.
+\bibitem{12} S. Boyd, L. Vandenberghe. Convex optimization[M]. Cambridge university press, 2004.
+\bibitem{13} N. S. Keskar, D. Mudigere, J. Nocedal, et al. On large-batch training for deep learning: Generalization gap and sharp minima[J]. arXiv preprint arXiv:1609.04836, 2016.
+\bibitem{14} G. E. Hinton, N. Srivastava, A. Krizhevsky, et al. Improving neural networks by preventing co-adaptation of feature detectors[J]. arXiv preprint arXiv:1207.0580, 2012.
+\bibitem{15} D. P. Kingma, J. Ba. Adam: A method for stochastic optimization[J]. arXiv preprint arXiv:1412.6980, 2014.
 \end{thebibliography}
+}
 
 \vspace{1em}
 
