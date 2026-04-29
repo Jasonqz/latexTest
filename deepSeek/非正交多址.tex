@@ -30,6 +30,9 @@
 \newcommand{\wuhhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
 \newcommand{\xiaosi}{\fontsize{12pt}{14pt}\selectfont} % 小四
 
+% 设置正文字体为精确的10.5pt
+\AtBeginDocument{\fontsize{10.5pt}{12pt}\selectfont}
+
 % 设置章节标题格式：黑体小四，左对齐
 \titleformat{\section}[hang]
   {\xiaosi \bfseries}
@@ -88,6 +91,8 @@
     \noindent {\xiaowu \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning}\par
     \vspace{2em}
 
+    % 收稿日期上方的横线
+    \noindent \rule{3.2cm}{0.4pt}\par
     % 收稿日期、基金项目 - 小五字体，英文数字用Times New Roman
     \noindent {\xiaowu \textbf{收稿日期：}\fontfamily{ptm}\selectfont 2024−03−15}；{\xiaowu \textbf{修回日期：}\fontfamily{ptm}\selectfont 2024−06−20}\par
     \noindent {\xiaowu \textbf{基金项目：}国家自然科学基金资助项目（\fontfamily{ptm}\selectfont No.62271001, No.62001002）}\par
@@ -242,12 +247,20 @@ DPNet(本文) & 0.31 & 18.2 \\
 \end{thebibliography}
 
 \vspace{1em}
-\noindent \textbf{作者简介}
 
-王华（1985-），男，山东济南人，博士，某大学教授，主要研究方向为MIMO通信、机器学习与物理层融合。
+\vspace{1em}
 
-张伟（1995-），男，江苏南京人，博士生，主要研究方向为深度学习在无线通信中的应用。
-
-李莉（1990-），女，四川成都人，博士，某大学副教授，主要研究方向为绿色通信、资源分配。
+\vspace{1em}
+{\xiaowu
+\noindent \textbf{[作者简介]}\\[-4pt]
+\noindent\begin{minipage}[t]{2.5cm}
+    \vspace{4pt}
+    \rule{2.5cm}{3.5cm}
+\end{minipage}\hspace{2pt}
+\begin{minipage}[t]{10cm}
+    \vspace{4pt}
+    秦政（\fontfamily{ptm}\selectfont 1990-），男，重庆人，博士，重庆邮电大学教授、博士生导师，主要研究方向为\fontfamily{ptm}\selectfont MIMO\fontfamily{rm}\selectfont 通信、深度学习与物理层融合。
+\end{minipage}
+}
 
 \end{document}
