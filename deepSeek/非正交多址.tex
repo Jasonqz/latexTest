@@ -12,6 +12,7 @@
 \usepackage{fancyhdr}
 \usepackage{ragged2e}
 \usepackage{titlesec}
+\usepackage{changepage} % 用于 adjustwidth 环境
 \usepackage{hyperref}
 \usepackage{enumitem}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
@@ -27,11 +28,11 @@
 % 字号设置
 \newcommand{\xiaowu}{\fontsize{9pt}{11pt}\selectfont} % 小五
 \newcommand{\sanhao}{\fontsize{16pt}{18pt}\selectfont} % 三号
-\newcommand{\wuhhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
+\newcommand{\wuhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
 \newcommand{\xiaosi}{\fontsize{12pt}{14pt}\selectfont} % 小四
 
 % 设置正文字体为精确的10.5pt
-\AtBeginDocument{\fontsize{10.5pt}{12pt}\selectfont}
+\AtBeginDocument{\wuhao}
 
 % 设置章节标题格式：黑体小四，左对齐
 \titleformat{\section}[hang]
@@ -39,6 +40,15 @@
   {\thesection}
   {1em}
   {}
+\titlespacing{\section}{0pt}{6pt}{6pt}
+
+% 设置子章节标题格式：黑体五号
+\titleformat{\subsection}[hang]
+  {\xiaowu \bfseries}
+  {\thesubsection}
+  {1em}
+  {}
+\titlespacing{\subsection}{0pt}{0pt}{0pt}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -57,28 +67,34 @@
 
 \begin{document}
 
+\begin{adjustwidth}{2em}{2em}
 \begin{center}
     % 中文标题 - 三号黑体
-    {\sanhao \textbf{多用户MIMO系统中基于深度学习的预编码与功率分配方法}}\par
+    {\sanhao \textbf{基于深度学习的多用户MIMO预编码与功率分配方法}}\par
     \vspace{1em}
     % 作者 - 五号楷体_GB2312
-    {\wuhhao \kaishu 秦政$^{1}$}\par
+    {\wuhao \kaishu 秦政$^{1}$}\par
     \vspace{0.3em}
     {\small （1. 重庆邮电大学，重庆 400065）}\par
     \vspace{1em}
 \end{center}
+\end{adjustwidth}
 
-    % 中文摘要 - 小五字体
-    \noindent {\xiaowu \textbf{摘\quad 要}：大规模多输入多输出（MIMO）技术是5G/6G通信系统的关键组成部分，其预编码和功率分配的联合优化是一个非凸、高复杂度的问题。传统迭代算法在用户数增多时收敛缓慢，难以满足低延迟要求。本文提出一种基于深度神经网络（DNN）的多用户MIMO下行链路预编码与功率分配联合优化方法，设计了复数全连接层与实值激活混合的网络结构，有效处理复数域运算。仿真结果表明，所提方法在多种信道场景下均可逼近加权最小均方误差（WMMSE）算法的性能，而计算时间显著降低，且对信道估计误差具有更强的鲁棒性。}\par
-    \noindent {\xiaowu \textbf{关键词}：大规模MIMO；深度学习；预编码；功率分配；无监督学习}\par
-    \noindent {\xiaowu \textbf{中图分类号}：TN929.5}\par
-    \noindent {\xiaowu \textbf{文献标志码}：A}\par
-    \noindent {\xiaowu \textbf{DOI}：10.11959/j.issn.1000-436x.20240001}\par
+    % 中文摘要 - 小五字体，整体缩进
+    \begin{adjustwidth}{2em}{2em}
+    {\xiaowu
+    \textbf{摘\quad 要}：大规模多输入多输出（MIMO）技术是5G/6G通信系统的关键组成部分，其预编码和功率分配的联合优化是一个非凸、高复杂度的问题。传统迭代算法在用户数增多时收敛缓慢，难以满足低延迟要求。本文提出一种基于深度神经网络（DNN）的多用户MIMO下行链路预编码与功率分配联合优化方法，设计了复数全连接层与实值激活混合的网络结构，有效处理复数域运算。仿真结果表明，所提方法在多种信道场景下均可逼近加权最小均方误差（WMMSE）算法的性能，而计算时间显著降低，且对信道估计误差具有更强的鲁棒性。\par
+    \noindent \textbf{关键词}：大规模MIMO；深度学习；预编码；功率分配；无监督学习\par
+    \noindent \textbf{中图分类号}：TN929.5\par
+    \noindent \textbf{文献标志码}：A\par
+    \noindent \textbf{DOI}：10.11959/j.issn.1000-436x.20240001\par
+    }
+    \end{adjustwidth}
     \vspace{2em}
 
     % 英文标题
     \begin{center}
-    {\Large \textbf{Deep Learning Based Precoding and Power Allocation for Multi-User MIMO Systems}}\par
+    {\Large \textbf{Deep Learning Based Precoding and Power Allocation Method for Multi-User MIMO Systems}}\par
     \vspace{1em}
     {\large QIN Zheng$^{1}$}\par
     \vspace{0.3em}
@@ -86,9 +102,14 @@
     \vspace{1em}
     \end{center}
 
-    % 英文摘要 - 小五字体
-    \noindent {\xiaowu \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a cornerstone technology for 5G and beyond communication systems, enabling significant improvements in spectral efficiency and system capacity. However, the joint optimization of precoding and power allocation poses formidable challenges due to its inherent non-convexity and high computational complexity. Traditional iterative approaches, such as the weighted minimum mean square error (WMMSE) algorithm, suffer from slow convergence when scaled to large user populations, hindering real-time implementation. To address these limitations, this paper presents an end-to-end deep learning framework for downlink multi-user MIMO systems. A hybrid neural network architecture is proposed, integrating complex-valued fully connected layers with real-valued activation functions to directly map channel state information to optimal precoding matrices. Comprehensive simulations demonstrate three key contributions: 1) The proposed method achieves within 95% of WMMSE performance across diverse channel conditions; 2) Computational latency is reduced by over two orders of magnitude compared to traditional algorithms; 3) Superior robustness to channel estimation errors is achieved. This work provides a novel data-driven approach for real-time resource optimization in massive MIMO systems.}\par
+    % 英文摘要 - 小五字体，整体缩进
+    \begin{adjustwidth}{2em}{2em}
+    {\xiaowu
+    \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a cornerstone technology for 5G and beyond communication systems, enabling significant improvements in spectral efficiency and system capacity. However, the joint optimization of precoding and power allocation poses formidable challenges due to its inherent non-convexity and high computational complexity. Traditional iterative approaches, such as the weighted minimum mean square error (WMMSE) algorithm, suffer from slow convergence when scaled to large user populations, hindering real-time implementation. To address these limitations, this paper presents an end-to-end deep learning framework for downlink multi-user MIMO systems. A hybrid neural network architecture is proposed, integrating complex-valued fully connected layers with real-valued activation functions to directly map channel state information to optimal precoding matrices. Comprehensive simulations demonstrate three key contributions: 1) The proposed method achieves within 95\% of WMMSE performance across diverse channel conditions; 2) Computational latency is reduced by over two orders of magnitude compared to traditional algorithms; 3) Superior robustness to channel estimation errors is achieved. This work provides a novel data-driven approach for real-time resource optimization in massive MIMO systems.\par
     \noindent {\xiaowu \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning}\par
+    }
+    \end{adjustwidth}
+    
     \vspace{2em}
 
     % 收稿日期上方的横线
