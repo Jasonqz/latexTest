@@ -13,6 +13,7 @@
 \usepackage{ragged2e}
 \usepackage{titlesec}
 \usepackage{changepage} % 用于 adjustwidth 环境
+\usepackage{balance} % 用于平衡双栏
 \usepackage{hyperref}
 \usepackage{enumitem}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
@@ -44,7 +45,7 @@
 
 % 设置子章节标题格式：黑体五号
 \titleformat{\subsection}[hang]
-  {\xiaowu \bfseries}
+  {\wuhao \bfseries}
   {\thesubsection}
   {1em}
   {}
@@ -56,7 +57,7 @@
 \fancyhead[LE,RO]{\small \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
-\newcommand{\upcite}[1]{\textsuperscript{[#1]}}
+\newcommand{\upcite}[1]{\textsuperscript{[#1]}}\newcommand{\normalcite}[1]{[#1]}
 
 \newtheorem{theorem}{定理}[section]
 \newtheorem{lemma}[theorem]{引理}
@@ -134,7 +135,7 @@
 
 传统预编码方案可分为线性和非线性两类：线性方案如迫零（ZF）、正则化迫零（RZF）等实现简单但性能受限；非线性方案如脏纸编码（DPC）理论性能最优但复杂度极高。近年来，加权最小均方误差（WMMSE）算法通过迭代优化框架在性能与复杂度之间取得了较好平衡，成为业界主流方法\upcite{2}。然而，WMMSE算法的迭代特性导致其计算复杂度随用户数量呈超线性增长，难以满足毫秒级延迟的实时通信需求。
 
-深度学习的兴起为解决复杂优化问题提供了新的思路。近年来，机器学习与通信理论的交叉研究取得了显著进展。文献\upcite{3}率先将全连接网络（FCN）应用于MIMO预编码设计，证明了数据驱动方法的可行性；文献\upcite{4}利用图神经网络（GNN）建模用户间干扰关系，实现了可扩展的功率分配方案；文献\upcite{5}提出了基于强化学习的动态资源分配框架，适用于时变信道环境。然而，现有深度学习方法普遍存在以下局限：
+深度学习的兴起为解决复杂优化问题提供了新的思路。近年来，机器学习与通信理论的交叉研究取得了显著进展。文献\normalcite{3}率先将全连接网络（FCN）应用于MIMO预编码设计，证明了数据驱动方法的可行性；文献\normalcite{4}利用图神经网络（GNN）建模用户间干扰关系，实现了可扩展的功率分配方案；文献\normalcite{5}提出了基于强化学习的动态资源分配框架，适用于时变信道环境。然而，现有深度学习方法普遍存在以下局限：
 
 \begin{enumerate}[label=\arabic*), topsep=0pt, partopsep=0pt, itemsep=-5pt]
     \item \textbf{复数运算处理不当}：多数方法将复数信道矩阵拆分为实部和虚部分别处理，破坏了复数运算的整体性，导致性能损失\upcite{6}；
@@ -242,9 +243,9 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 \hline
 方法 & 复数处理 & 学习方式 & 性能损失 & 计算复杂度 \\
 \hline
-文献\upcite{3} & 实虚分离 & 监督学习 & 约5\% & $O(N_t^2 K)$ \\
-文献\upcite{4} & 实虚分离 & 监督学习 & 约3\% & $O(N_t K^2)$ \\
-文献\upcite{11} & 复数运算 & 强化学习 & 约8\% & $O(N_t^3)$ \\
+文献\normalcite{3} & 实虚分离 & 监督学习 & 约5\% & $O(N_t^2 K)$ \\
+文献\normalcite{4} & 实虚分离 & 监督学习 & 约3\% & $O(N_t K^2)$ \\
+文献\normalcite{11} & 复数运算 & 强化学习 & 约8\% & $O(N_t^3)$ \\
 本文方法 & 复数运算 & 无监督学习 & <2\% & $O(N_t^2 K)$ \\
 \hline
 \end{tabular}}
@@ -482,6 +483,9 @@ DPNet(本文) & 0.31 & 18.2 \\
 \appendix
 \section{损失函数梯度推导}
 损失函数关于预编码矩阵的梯度可由复数微分法则得到。设$R = \sum_k \log_2(1+\gamma_k)$，则$\frac{\partial R}{\partial \mathbf{w}_k} = \frac{1}{\ln2} \cdot \frac{1}{1+\gamma_k} \cdot \frac{\partial \gamma_k}{\partial \mathbf{w}_k^*}$，其中$\frac{\partial \gamma_k}{\partial \mathbf{w}_k^*} = \frac{\mathbf{h}_k^H \mathbf{h}_k \mathbf{w}_k}{N_k} - \frac{\gamma_k}{N_k} \frac{\partial N_k}{\partial \mathbf{w}_k^*}$，$N_k = \sum_j |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma_k^2$。具体展开略，利用链式法则即可实现自动微分。
+
+% 平衡双栏
+\balance
 
 % 参考文献使用六号字体
 {\fontsize{7.5pt}{9pt}\selectfont
