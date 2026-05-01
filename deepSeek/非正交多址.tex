@@ -46,6 +46,12 @@
 % 设置正文字体为精确的10.5pt
 \AtBeginDocument{\wuhao}
 
+% 缩小公式与前后行的间距
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\belowdisplayshortskip}{1pt}
+
 % 设置章节标题格式：黑体小四，左对齐
 \titleformat{\section}[hang]
   {\xiaosi \bfseries}
@@ -164,25 +170,24 @@
     \item \textbf{鲁棒性分析}：通过理论推导和仿真验证，证明所提方法对信道估计误差具有良好的鲁棒性。
 \end{enumerate}
 
-本文余下部分结构如下：第2节建立系统模型并描述优化问题；第3节详细阐述基于深度神经网络的联合优化算法；第4节提供仿真结果与性能分析；第5节总结全文并展望未来研究方向。
 
 \section{系统模型与问题建模}
 
 \subsection{系统模型}
 
-考虑一个多用户MIMO下行链路系统，基站配置$N_t$根发射天线，同时服务$K$个单天线用户。定义$\mathbf{h}_k \in \mathbb{C}^{1 \times N_t}$为用户$k$的信道矢量，$\mathbf{H} = [\mathbf{h}_1^T, \mathbf{h}_2^T, \ldots, \mathbf{h}_K^T]^T \in \mathbb{C}^{K \times N_t}$为聚合信道矩阵。基站发送信号可表示为：
+考虑一个多用户MIMO下行链路系统，基站配置$N_t$根发射天线，同时服务$K$个单天线用户。定义$\mathbf{h}_k \in \mathbb{C}^{1 \times N_t}$为用户$k$的信道矢量，$\mathbf{H} = [\mathbf{h}_1^T, \mathbf{h}_2^T, \ldots, \mathbf{h}_K^T]^T \in \mathbb{C}^{K \times N_t}$为聚合信道矩阵。基站发送信号可表示为：\vspace{-1em}
 
 \begin{equation}
 \mathbf{x} = \sum_{k=1}^K \mathbf{w}_k s_k
 \end{equation}
 
-其中，$\mathbf{w}_k \in \mathbb{C}^{N_t \times 1}$为用户$k$的预编码矢量，$s_k$为归一化数据符号（$\mathbb{E}[|s_k|^2] = 1$）。用户$k$的接收信号为：
+其中，$\mathbf{w}_k \in \mathbb{C}^{N_t \times 1}$为用户$k$的预编码矢量，$s_k$为归一化数据符号（$\mathbb{E}[|s_k|^2] = 1$）。用户$k$的接收信号为：\vspace{-2em}
 
 \begin{equation}
 y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j s_j + n_k
 \end{equation}
 
-其中，$n_k \sim \mathcal{CN}(0, \sigma^2)$为加性高斯白噪声（假设所有用户噪声功率相同）。定义用户$k$的信干噪比（SINR）为：
+其中，$n_k \sim \mathcal{CN}(0, \sigma^2)$为加性高斯白噪声（假设所有用户噪声功率相同）。定义用户$k$的信干噪比（SINR）为：\vspace{-1em}
 
 \begin{equation}
 \gamma_k = \frac{|\mathbf{h}_k \mathbf{w}_k|^2}{\sum_{j \neq k} |\mathbf{h}_k \mathbf{w}_j|^2 + \sigma^2}
@@ -190,7 +195,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{优化问题}
 
-本文的优化目标是在满足总功率约束的前提下最大化系统和速率，即：
+本文的优化目标是在满足总功率约束的前提下最大化系统和速率，即：\vspace{-2em}
 
 \begin{subequations}
 \begin{align}
@@ -198,7 +203,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 \text{s.t.} \quad & \sum_{k=1}^K \|\mathbf{w}_k\|_F^2 \le P_{\text{max}}
 \end{align}
 \label{eq:optimization}
-\end{subequations}
+\end{subequations}\vspace{-1em}
 
 其中，$\|\cdot\|_F$表示Frobenius范数，$P_{\text{max}}$为基站最大发射功率。该问题具有以下特点：
 
@@ -218,13 +223,12 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
     \item \textbf{自适应能力}：网络可自动学习信道特征与预编码策略之间的复杂映射关系。
 \end{enumerate}
 
-接下来，我们详细阐述所提深度神经网络的架构设计和训练策略。
 
 \section{深度学习预编码与功率分配网络设计}
 
 \subsection{复数神经网络原理}
 
-在MIMO系统中，信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系，导致性能损失。为此，本文采用复数全连接层\upcite{5}，其数学表达式为：
+在MIMO系统中，信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系，导致性能损失。为此，本文采用复数全连接层\upcite{5}，其数学表达式为：\vspace{-2em}
 
 \begin{equation}
 \mathbf{y} = \mathbf{W}_c \mathbf{z} + \mathbf{b}_c
@@ -232,11 +236,11 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 其中，$\mathbf{W}_c \in \mathbb{C}^{m \times n}$为复数权重矩阵，$\mathbf{b}_c \in \mathbb{C}^{m}$为复数偏置向量，$\mathbf{z} \in \mathbb{C}^{n}$为复数输入向量。反向传播时，利用柯西-黎曼条件对复数变量求导，将复数梯度分解为实部和虚部两部分。
 
-为避免复数激活函数（如modReLU）的数值不稳定性，本文采用CReLU激活函数\upcite{10}：
+为避免复数激活函数（如modReLU）的数值不稳定性，本文采用CReLU激活函数\upcite{10}：\vspace{-2.2em}
 
 \begin{equation}
 \text{CReLU}(z) = \text{ReLU}(\Re(z)) + \mathrm{j} \cdot \text{ReLU}(\Im(z))
-\end{equation}
+\end{equation}\vspace{-2em}
 
 该激活函数将实部和虚部分别进行ReLU操作，既保持了复数结构，又避免了梯度消失问题。
 
@@ -403,7 +407,7 @@ DNN-Sep & $O(N_t^2 K)$ & 0.4 & 22.1 \\
 \end{figure}
 
 \subsection{计算复杂度与运行时间}
-表2对比了各种方法的平均在线计算时间（CPU：Intel i7-12700，PyTorch 2.0）。DPNet的推理时间仅需0.3ms，比WMMSE（30次迭代）快约20倍。ZF-EPA最快，但性能最差。
+表2展示了不同预编码方法在实际测试环境下的平均在线计算时间对比。测试平台配置为Intel Core i7-12700 CPU，深度学习方法基于PyTorch 2.0框架实现。结果表明，本文提出的DPNet方法推理时间仅需0.31ms，相比WMMSE算法（30次迭代）提速约20倍。虽然ZF-EPA方法计算速度最快，但以显著的性能损失为代价。
 
 % 确保表格宽度适配页面
 \begin{table}[htbp]
@@ -425,7 +429,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 \subsection{鲁棒性分析}
 
-在实际通信系统中，信道估计误差是不可避免的。本小节分析不同方法在信道估计误差下的鲁棒性。定义信道估计误差模型为：
+在实际通信系统中，信道估计误差是不可避免的。本小节分析不同方法在信道估计误差下的鲁棒性。定义信道估计误差模型为：\vspace{-1em}
 
 \begin{equation}
 \hat{\mathbf{H}} = \mathbf{H} + \varepsilon \mathbf{E}
