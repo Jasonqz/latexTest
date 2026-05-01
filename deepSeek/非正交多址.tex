@@ -8,6 +8,8 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{subcaption}
+\usepackage{caption}
+% \captionsetup{font={small,stretch=1}, labelfont={bf}, labelsep=period}
 \usepackage{cite}
 \usepackage{fancyhdr}
 \usepackage{ragged2e}
@@ -31,6 +33,15 @@
 \newcommand{\sanhao}{\fontsize{16pt}{18pt}\selectfont} % 三号
 \newcommand{\wuhao}{\fontsize{10.5pt}{12pt}\selectfont} % 五号
 \newcommand{\xiaosi}{\fontsize{12pt}{14pt}\selectfont} % 小四
+\newcommand{\liuhao}{\fontsize{7.5pt}{9pt}\selectfont} % 六号
+
+% 设置图的caption字体为六号
+\DeclareCaptionFont{liuhao}{\fontsize{7.5pt}{9pt}\selectfont}
+\captionsetup[figure]{font=liuhao, labelfont={bf}, labelsep=period}
+
+% 设置表的caption字体为黑体小五
+\DeclareCaptionFont{tablefont}{\xiaowu \bfseries}
+\captionsetup[table]{font=tablefont, labelfont={bf}, labelsep=period}
 
 % 设置正文字体为精确的10.5pt
 \AtBeginDocument{\wuhao}
@@ -84,7 +95,7 @@
     % 中文摘要 - 小五字体，整体缩进
     \begin{adjustwidth}{2em}{2em}
     {\xiaowu
-    \textbf{摘\quad 要}：大规模多输入多输出（MIMO）技术是5G/6G通信系统的关键组成部分，其预编码和功率分配的联合优化是一个非凸、高复杂度的问题。传统迭代算法在用户数增多时收敛缓慢，难以满足低延迟要求。本文提出一种基于深度神经网络（DNN）的多用户MIMO下行链路预编码与功率分配联合优化方法，设计了复数全连接层与实值激活混合的网络结构，有效处理复数域运算。仿真结果表明，所提方法在多种信道场景下均可逼近加权最小均方误差（WMMSE）算法的性能，而计算时间显著降低，且对信道估计误差具有更强的鲁棒性。\par
+    \textbf{摘\quad 要}：大规模多输入多输出（MIMO）技术是5G/6G通信系统的关键组成部分，其预编码和功率分配的联合优化是一个非凸、高复杂度的问题。传统迭代算法在用户数增多时收敛缓慢，难以满足低延迟要求。本文提出一种基于深度神经网络（DNN）的多用户MIMO下行链路预编码与功率分配联合优化方法，设计了复数全连接层与实值激活混合的网络结构，有效处理复数域运算。仿真结果表明，所提方法在多种信道场景下均可逼近加权最小均方误差（WMMSE，weighted minimum mean square error）算法的性能，而计算时间显著降低，且对信道估计误差具有更强的鲁棒性。\par
     \noindent \textbf{关键词}：大规模MIMO；深度学习；预编码；功率分配；无监督学习\par
     \noindent \textbf{中图分类号}：TN929.5\par
     \noindent \textbf{文献标志码}：A\par
@@ -131,11 +142,11 @@
 
 \section{引言}
 
-随着移动数据流量的指数级增长，第五代（5G）及未来第六代（6G）移动通信系统对频谱效率和系统容量提出了更高要求。大规模多输入多输出（Massive MIMO）技术通过在基站部署数十至数百根天线，可实现空间复用增益、阵列增益和干扰抑制，已成为提升系统性能的核心技术\upcite{1}。然而，Massive MIMO系统的性能高度依赖于有效的预编码与功率分配策略，其优化问题具有非凸性和高维度特性，给算法设计带来了严峻挑战。
+随着移动数据流量的指数级增长，第五代（5G，fifth generation）及未来第六代（6G，sixth generation）移动通信系统对频谱效率和系统容量提出了更高要求。大规模多输入多输出（Massive MIMO，massive multiple-input multiple-output）技术通过在基站部署数十至数百根天线，可实现空间复用增益、阵列增益和干扰抑制，已成为提升系统性能的核心技术\upcite{1}。然而，Massive MIMO系统的性能高度依赖于有效的预编码与功率分配策略，其优化问题具有非凸性和高维度特性，给算法设计带来了严峻挑战。
 
-传统预编码方案可分为线性和非线性两类：线性方案如迫零（ZF）、正则化迫零（RZF）等实现简单但性能受限；非线性方案如脏纸编码（DPC）理论性能最优但复杂度极高。近年来，加权最小均方误差（WMMSE）算法通过迭代优化框架在性能与复杂度之间取得了较好平衡，成为业界主流方法\upcite{2}。然而，WMMSE算法的迭代特性导致其计算复杂度随用户数量呈超线性增长，难以满足毫秒级延迟的实时通信需求。
+传统预编码方案可分为线性和非线性两类：线性方案如迫零（ZF，zero forcing）、正则化迫零（RZF，regularized zero forcing）等实现简单但性能受限；非线性方案如脏纸编码（DPC，dirty paper coding）理论性能最优但复杂度极高。近年来，加权最小均方误差（WMMSE）算法通过迭代优化框架在性能与复杂度之间取得了较好平衡，成为业界主流方法\upcite{2}。然而，WMMSE算法的迭代特性导致其计算复杂度随用户数量呈超线性增长，难以满足毫秒级延迟的实时通信需求。
 
-深度学习的兴起为解决复杂优化问题提供了新的思路。近年来，机器学习与通信理论的交叉研究取得了显著进展。文献\normalcite{3}率先将全连接网络（FCN）应用于MIMO预编码设计，证明了数据驱动方法的可行性；文献\normalcite{4}利用图神经网络（GNN）建模用户间干扰关系，实现了可扩展的功率分配方案；文献\normalcite{5}提出了基于强化学习的动态资源分配框架，适用于时变信道环境。然而，现有深度学习方法普遍存在以下局限：
+深度学习的兴起为解决复杂优化问题提供了新的思路。近年来，机器学习与通信理论的交叉研究取得了显著进展。文献\normalcite{3}率先将全连接网络（FCN，fully connected network）应用于MIMO预编码设计，证明了数据驱动方法的可行性；文献\normalcite{4}利用图神经网络（GNN，graph neural network）建模用户间干扰关系，实现了可扩展的功率分配方案；文献\normalcite{5}提出了基于强化学习（RL，reinforcement learning）的动态资源分配框架，适用于时变信道环境。然而，现有深度学习方法普遍存在以下局限：
 
 \begin{enumerate}[label=\arabic*), topsep=0pt, partopsep=0pt, itemsep=-5pt]
     \item \textbf{复数运算处理不当}：多数方法将复数信道矩阵拆分为实部和虚部分别处理，破坏了复数运算的整体性，导致性能损失\upcite{6}；
