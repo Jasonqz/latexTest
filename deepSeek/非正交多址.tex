@@ -18,14 +18,15 @@
 \usepackage{balance} % 用于平衡双栏
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{cleveref}
+
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
 
 % 字体设置
 \setCJKmainfont[BoldFont=SimHei, ItalicFont=KaiTi]{SimSun} % 正文：五号宋体
 \setCJKsansfont{SimHei} % 黑体
 \setCJKmonofont{SimSun} % 等宽字体
-\setCJKfamilyfont{kaiti}{KaiTi_GB2312} % 楷体_GB2312
-% \newcommand{\kaishu}{\CJKfamily{kaiti}} % 定义楷体命令
+\setCJKfamilyfont{kaiti}{楷体}
 \setmainfont{Times New Roman} % 英文和数字使用Times New Roman
 
 % 字号设置
@@ -91,9 +92,9 @@
     {\sanhao \textbf{基于深度学习的多用户MIMO预编码与功率分配方法}}\par
     \vspace{1em}
     % 作者 - 五号楷体_GB2312
-    {\wuhao \kaishu 秦政$^{1}$}\par
+    {\wuhao \CJKfamily{kaiti} 秦政$^{1}$}\par
     \vspace{0.3em}
-    {\small （1. 重庆邮电大学，重庆 400065）}\par
+    {\liuhao （1. 重庆邮电大学，重庆 400065）}\par
     \vspace{1em}
 \end{center}
 \end{adjustwidth}
@@ -124,7 +125,7 @@
     \begin{adjustwidth}{2em}{2em}
     {\xiaowu
     \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a cornerstone technology for 5G and beyond communication systems, enabling significant improvements in spectral efficiency and system capacity. However, the joint optimization of precoding and power allocation poses formidable challenges due to its inherent non-convexity and high computational complexity. Traditional iterative approaches, such as the weighted minimum mean square error (WMMSE) algorithm, suffer from slow convergence when scaled to large user populations, hindering real-time implementation. To address these limitations, this paper presents an end-to-end deep learning framework for downlink multi-user MIMO systems. A hybrid neural network architecture is proposed, integrating complex-valued fully connected layers with real-valued activation functions to directly map channel state information to optimal precoding matrices. Comprehensive simulations demonstrate three key contributions: 1) The proposed method achieves within 95\% of WMMSE performance across diverse channel conditions; 2) Computational latency is reduced by over two orders of magnitude compared to traditional algorithms; 3) Superior robustness to channel estimation errors is achieved. This work provides a novel data-driven approach for real-time resource optimization in massive MIMO systems.\par
-    \noindent {\xiaowu \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning}\par
+    \noindent \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning\par
     }
     \end{adjustwidth}
     
@@ -133,8 +134,9 @@
     % 收稿日期上方的横线
     \noindent \rule{3.2cm}{0.4pt}\par
     % 收稿日期、基金项目 - 小五字体，英文数字用Times New Roman
-    \noindent {\xiaowu \textbf{收稿日期：}\fontfamily{ptm}\selectfont 2024−03−15}；{\xiaowu \textbf{修回日期：}\fontfamily{ptm}\selectfont 2024−06−20}\par
-    \noindent {\xiaowu \textbf{基金项目：}国家自然科学基金资助项目（\fontfamily{ptm}\selectfont No.62271001, No.62001002）}\par
+    \noindent {\xiaowu \textbf{收稿日期：}\rmfamily 2024−03−15}；{\xiaowu \textbf{修回日期：}\rmfamily 2024−06−20}\par
+    \noindent {\xiaowu \textbf{通信作者：}秦政，\rmfamily 2847815553@qq.com}\par
+    \noindent {\xiaowu \textbf{基金项目：}国家自然科学基金资助项目（\rmfamily No.62271001, No.62001002）}\par
     \noindent {\xiaowu \textbf{Foundation Items:} The National Natural Science Foundation of China (No.62271001, No.62001002)}\par
     \vspace{2em}
 
@@ -246,7 +248,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{相关工作对比}
 
-表\ref{tab:related_work}对比了本文方法与现有深度学习预编码方法的主要特性：
+表1对比了本文方法与现有深度学习预编码方法的主要特性：
 
 \begin{table}[htbp]
 \centering
@@ -267,7 +269,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 }
 \end{table}
 
-由表\ref{tab:related_work}可见，本文方法在复数处理、学习方式和性能损失方面均具有优势。
+由表1可见，本文方法在复数处理、学习方式和性能损失方面均具有优势。
 
 \subsection{网络结构}
 本文设计的深度预编码网络（DPNet）结构如图1所示。输入层接收用户信道矩阵$\mathbf{H}$（展平为$K \times N_t$复数向量）。随后经过三个复数全连接层，神经元数目分别为$512$、$1024$和$2K N_t$。最后一层的输出重新整形为复数预编码矩阵$\mathbf{W} \in \mathbb{C}^{N_t\times K}$。功率约束通过一个投影层实现：
@@ -278,7 +280,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{dpnet.png}
 \caption{DPNet 结构图}
 \label{fig:dpnet}
 \end{figure}
@@ -297,7 +299,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{仿真设置}
 
-仿真参数设置如表\ref{tab:sim_params}所示。基站配置$N_t = 64$根发射天线，服务$K = 16$个单天线用户，载波频率为2.6 GHz，带宽为10 MHz。信道模型采用瑞利平坦衰落，噪声功率谱密度为$-174$ dBm/Hz。
+仿真参数设置如表2所示。基站配置$N_t = 64$根发射天线，服务$K = 16$个单天线用户，载波频率为2.6 GHz，带宽为10 MHz。信道模型采用瑞利平坦衰落，噪声功率谱密度为$-174$ dBm/Hz。
 
 \begin{table}[htbp]
 \centering
@@ -356,7 +358,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{和速率性能对比}
 
-图\ref{fig:sumrate}给出了不同方法的和速率随信噪比（SNR）变化的曲线。可以看出：
+图2给出了不同方法的和速率随信噪比（SNR）变化的曲线。可以看出：
 
 \begin{enumerate}[label=\arabic*), topsep=0pt, partopsep=0pt, itemsep=-5pt]
     \item 在低SNR区域（0-10 dB），所有方法的和速率均随SNR线性增长，本文方法与WMMSE性能几乎一致；
@@ -367,14 +369,14 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{sumrate.png}
 \caption{不同方法的和速率对比}
 \label{fig:sumrate}
 \end{figure}
 
 \subsection{计算复杂度分析}
 
-表\ref{tab:complexity1}对比了各种方法的计算复杂度和实际运行时间。测试环境为Intel Core i7-12700 CPU，PyTorch 2.0框架。
+表4对比了各种方法的计算复杂度和实际运行时间。测试环境为Intel Core i7-12700 CPU，PyTorch 2.0框架。
 
 \begin{table}[htbp]
 \centering
@@ -401,7 +403,7 @@ DNN-Sep & $O(N_t^2 K)$ & 0.4 & 22.1 \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{sumrate2.png}
 \caption{不同方法和速率对比（$N_t=16, K=8$）}
 \label{fig:sumrate2}
 \end{figure}
@@ -439,7 +441,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{robustness.png}
 \caption{信道估计误差下的性能损失（SNR=20 dB）}
 \label{fig:robustness}
 \end{figure}
@@ -461,7 +463,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{sensitivity.png}
 \caption{网络参数敏感性分析}
 \label{fig:sensitivity}
 \end{figure}
@@ -478,7 +480,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{example-image}
+\includegraphics[width=0.8\linewidth]{robustness2.png}
 \caption{信道估计误差下的和速率损失（SNR=15dB）}
 \label{fig:robustness2}
 \end{figure}
@@ -536,7 +538,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 \end{minipage}\hspace{2pt}
 \begin{minipage}[t]{10cm}
     \vspace{4pt}
-    秦政（\fontfamily{ptm}\selectfont 1990-），男，重庆人，博士，重庆邮电大学教授、博士生导师，主要研究方向为\fontfamily{ptm}\selectfont MIMO\fontfamily{rm}\selectfont 通信、深度学习与物理层融合。
+    秦政（\rmfamily 1990-），男，重庆人，博士，重庆邮电大学教授、博士生导师，主要研究方向为\rmfamily MIMO\fontfamily{rm}\selectfont 通信、深度学习与物理层融合。
 \end{minipage}
 }
 
