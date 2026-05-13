@@ -1,0 +1,247 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{array}
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{cite}
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\usepackage{balance}
+
+\begin{document}
+
+\title{Deep Learning for Intelligent Resource Allocation in 6G Mobile Networks}
+
+\author{IEEE Publication Technology Department
+\thanks{Manuscript received October 2024; revised December 2024. This work was supported by the National Science Foundation under Grant CNS-2024123.}}
+\markboth{Journal of Communications and Networks,~Vol.~18, No.~9, September~2020}%
+{Deep Learning for Intelligent Resource Allocation in 6G Mobile Networks}
+
+\maketitle
+
+\begin{abstract}
+The upcoming sixth-generation (6G) mobile networks are expected to provide ultra-reliable low-latency communication (URLLC), massive machine-type communication (mMTC), and enhanced mobile broadband (eMBB) services with unprecedented data rates and spectrum efficiency. However, the dynamic and complex nature of 6G networks poses significant challenges for traditional resource allocation methods. This paper proposes a deep learning-based framework for intelligent resource allocation in 6G networks. Specifically, we develop a deep reinforcement learning (DRL) algorithm that can learn optimal power allocation and user scheduling policies without requiring explicit system models. Simulation results demonstrate that the proposed approach achieves up to 35\% improvement in spectral efficiency compared to conventional methods while maintaining low computational complexity suitable for real-time implementation.
+\end{abstract}
+
+\begin{IEEEkeywords}
+6G mobile networks, deep learning, resource allocation, reinforcement learning, power control, user scheduling.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{T}{he} deployment of sixth-generation (6G) mobile networks is anticipated to revolutionize wireless communications by enabling data rates exceeding 1 Tbps, end-to-end latency below 0.1 ms, and connectivity for billions of devices \cite{You2021}. These networks will support diverse applications including holographic communications, autonomous vehicles, extended reality, and smart city infrastructure. However, achieving these ambitious targets requires revolutionary approaches to radio resource management.
+
+Traditional resource allocation methods, such as water-filling algorithms and convex optimization techniques, have been successfully employed in previous generations of cellular networks \cite{Rappaport2013}. However, these methods face several limitations in 6G scenarios:
+\begin{itemize}
+    \item High computational complexity that cannot meet stringent latency requirements
+    \item Inability to adapt to rapidly changing network conditions
+    \item Limited scalability for massive connectivity scenarios
+    \item Difficulty in handling non-convex optimization problems
+\end{itemize}
+
+Recently, deep learning has emerged as a promising solution for addressing these challenges \cite{Chen2018}. Deep neural networks can learn complex patterns directly from data and make decisions in real-time. In particular, deep reinforcement learning (DRL) has shown great potential for dynamic resource allocation problems where the environment is uncertain and time-varying \cite{Sutton2018}.
+
+The main contributions of this paper are:
+\begin{itemize}
+    \item We propose a DRL-based framework for joint power allocation and user scheduling in 6G networks
+    \item We develop a novel attention-based neural network architecture that captures spatial-temporal dependencies in wireless channels
+    \item We demonstrate through extensive simulations that the proposed approach significantly outperforms existing methods
+    \item We provide implementation guidelines for real-time deployment on edge computing platforms
+\end{itemize}
+
+The remainder of this paper is organized as follows. Section II reviews related work. Section III presents the system model. Section IV describes the proposed deep learning framework. Section V provides simulation results and analysis. Section VI concludes the paper.
+
+\section{Related Work}
+The application of machine learning to wireless resource allocation has been extensively studied in recent years. In \cite{Eisen2019}, the authors proposed a learning-based approach for power allocation in Gaussian interference channels using deep neural networks. However, their method requires complete channel state information (CSI) and cannot adapt to channel variations.
+
+For cellular networks, several works have applied deep learning to cell association and handover management. The authors in \cite{Sun2019} developed a CNN-based prediction model for user mobility, achieving 20\% reduction in handover failures. Nevertheless, their approach focuses solely on mobility management without considering other resource dimensions.
+
+Deep reinforcement learning has been applied to various resource allocation problems in 5G and beyond networks. In \cite{Neumann2020}, a DQN-based algorithm was proposed for spectrum sharing in cognitive radio networks. Similarly, the work in \cite{Chen2020} employed actor-critic methods for cloud radio access network (C-RAN) resource management.
+
+Despite these advances, several challenges remain unaddressed. First, most existing works consider simplified channel models that do not capture the complexity of 6G propagation environments. Second, the scalability of proposed algorithms to massive MIMO and millimeter-wave systems needs further investigation. Third, the robustness of learning-based methods against adversarial attacks and model uncertainties requires more attention.
+
+\section{System Model}
+\subsection{Network Architecture}
+We consider a downlink multi-user MIMO-OFDM system operating in a 6G network with $B$ base stations, each equipped with $N_t$ transmit antennas. The system serves $K$ mobile users, each with $N_r$ receive antennas. The total bandwidth is divided into $M$ subcarriers.
+
+The received signal at user $k$ on subcarrier $m$ can be expressed as:
+\begin{equation}
+\mathbf{y}_{k,m} = \mathbf{H}_{k,m} \mathbf{x}_m + \mathbf{n}_{k,m}
+\end{equation}
+where $\mathbf{H}_{k,m} \in \mathbb{C}^{N_r \times N_t}$ denotes the channel matrix, $\mathbf{x}_m \in \mathbb{C}^{N_t \times 1}$ is the transmitted signal vector, and $\mathbf{n}_{k,m} \sim \mathcal{CN}(0, \sigma^2 \mathbf{I})$ represents additive white Gaussian noise.
+
+The achievable data rate for user $k$ is given by:
+\begin{equation}
+R_k = \sum_{m=1}^{M} \log_2 \left(1 + \frac{p_{k,m} \|\mathbf{H}_{k,m}\|_F^2}{\sigma^2 + \sum_{j \neq k} p_{j,m} \|\mathbf{H}_{j,k,m}\|_F^2}\right)
+\end{equation}
+where $p_{k,m}$ denotes the transmit power allocated to user $k$ on subcarrier $m$.
+
+\subsection{Optimization Problem}
+Our objective is to maximize the system sum-rate while satisfying minimum rate requirements and power constraints:
+\begin{align}
+\max_{\mathbf{p}, \mathbf{s}} \quad & \sum_{k=1}^{K} R_k \\
+\text{s.t.} \quad & R_k \geq R_{\min}, \forall k \\
+& \sum_{k=1}^{K} \sum_{m=1}^{M} p_{k,m} \leq P_{\max} \\
+& p_{k,m} \geq 0, \forall k,m \\
+& s_{k,m} \in \{0, 1\}, \forall k,m
+\end{align}
+where $s_{k,m}$ is a binary scheduling indicator and $R_{\min}$ represents the minimum rate threshold.
+
+\section{Proposed Deep Learning Framework}
+\subsection{Deep Reinforcement Learning Formulation}
+We formulate the resource allocation problem as a Markov Decision Process (MDP) where:
+\begin{itemize}
+    \item \textbf{State Space}: $\mathcal{S} = \{\mathbf{H}, \mathbf{Q}, t\}$ including channel matrices, queue lengths, and time index
+    \item \textbf{Action Space}: $\mathcal{A} = \{\mathbf{p}, \mathbf{s}\}$ representing power allocation and scheduling decisions
+    \item \textbf{Reward}: $r = \sum_{k} R_k - \lambda \cdot \mathbb{1}(R_k < R_{\min})$
+\end{itemize}
+
+\subsection{Neural Network Architecture}
+We employ a deep deterministic policy gradient (DDPG) algorithm with a novel attention-based critic network. The actor network $\mu(\mathbf{s}|\theta_\mu)$ outputs continuous power allocations, while the critic network $Q(\mathbf{s}, \mathbf{a}|\theta_Q)$ estimates the action-value function.
+
+As shown in Fig. \ref{fig:architecture}, the critic network consists of:
+\begin{enumerate}
+    \item Input layer processing the state and action concatenated vectors
+    \item Three fully connected layers with 512, 256, and 128 neurons
+    \item Attention mechanism for aggregating channel information across subcarriers
+    \item Output layer producing Q-value estimates
+\end{enumerate}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{example-image}
+    \caption{Proposed DRL-based resource allocation architecture.}
+    \label{fig:architecture}
+\end{figure}
+
+The attention weights are computed as:
+\begin{equation}
+\alpha_m = \frac{\exp(\mathbf{w}^T \tanh(\mathbf{W}_h \mathbf{h}_m))}{\sum_{m'=1}^{M} \exp(\mathbf{w}^T \tanh(\mathbf{W}_h \mathbf{h}_{m'}))}
+\end{equation}
+where $\mathbf{h}_m$ represents the hidden features of subcarrier $m$.
+
+\subsection{Training Procedure}
+The training process follows the standard DDPG algorithm with experience replay and target networks. We implement the following enhancements for stable training:
+\begin{itemize}
+    \item Prioritized experience replay based on TD-error magnitudes
+    \item Batch normalization for faster convergence
+    \item Gradient clipping to prevent exploding gradients
+    \item Curriculum learning starting from simple scenarios
+\end{itemize}
+
+\section{Simulation Results}
+\subsection{Simulation Setup}
+We evaluate the proposed algorithm through extensive simulations using MATLAB and Python TensorFlow. The simulation parameters follow the 3GPP 6G evaluation guidelines as shown in Table \ref{tab:parameters}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Simulation Parameters}
+    \label{tab:parameters}
+    \begin{tabular}{|c|c|}
+        \hline
+        Parameter & Value \\
+        \hline
+        Carrier Frequency & 28 GHz (mmWave) \\
+        \hline
+        Bandwidth & 100 MHz \\
+        \hline
+        Number of Subcarriers & 512 \\
+        \hline
+        Transmit Antennas & 64 \\
+        \hline
+        Receive Antennas & 4 \\
+        \hline
+        Maximum Transmit Power & 30 dBm \\
+        \hline
+        Number of Users & 10-50 \\
+        \hline
+        Channel Model & 3GPP UMi \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Performance Comparison}
+Fig. \ref{fig:convergence} shows the convergence behavior of the proposed DRL algorithm compared to baseline methods. The proposed approach achieves faster convergence and higher final performance.
+
+\begin{figure}[htbp]
+    \centering
+    \subfloat[Sum-rate convergence]{\includegraphics[width=0.45\linewidth]{example-image-a}\label{fig:convergence}}
+    \hfill
+    \subfloat[Spectral efficiency CDF]{\includegraphics[width=0.45\linewidth]{example-image-b}\label{fig:cdf}}
+    \caption{Performance comparison of different algorithms.}
+    \label{fig:performance}
+\end{figure}
+
+Table \ref{tab:comparison} summarizes the performance of different resource allocation algorithms. The proposed method achieves a 35\% improvement in average spectral efficiency over the proportional fair scheduling baseline.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Performance Comparison}
+    \label{tab:comparison}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Method & Avg. Rate (bps/Hz) & 5\%-tile Rate & Latency (ms) \\
+        \hline
+        Round Robin & 4.2 & 1.8 & 0.5 \\
+        \hline
+        Proportional Fair & 6.8 & 3.2 & 1.2 \\
+        \hline
+        WMMSE & 8.1 & 4.5 & 15.3 \\
+        \hline
+        DQN \cite{Neumann2020} & 7.9 & 4.1 & 2.1 \\
+        \hline
+        \textbf{Proposed DDPG} & \textbf{9.2} & \textbf{5.3} & \textbf{0.8} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The cumulative distribution function (CDF) of spectral efficiency is presented in Fig. \ref{fig:cdf}. The proposed algorithm demonstrates superior performance across the entire distribution, particularly in the tail region where minimum rate requirements must be satisfied.
+
+\section{Implementation Considerations}
+For real-time deployment in 6G networks, we consider edge computing platforms with GPU acceleration. The trained neural network can be quantized to INT8 precision, reducing inference time to approximately 0.3 ms on NVIDIA Jetson AGX Orin. This meets the URLLC requirement of 1 ms end-to-end latency.
+
+\section{Conclusion}
+This paper proposed a deep reinforcement learning framework for intelligent resource allocation in 6G mobile networks. The key contributions include:
+\begin{itemize}
+    \item A DDPG-based algorithm with attention mechanism for capturing spatial-temporal dependencies
+    \item Demonstration of 35\% spectral efficiency improvement over conventional methods
+    \item Real-time implementation achieving sub-millisecond inference latency
+\end{itemize}
+
+Future work will extend this framework to integrated sensing and communication (ISAC) scenarios and investigate federated learning approaches for distributed 6G networks.
+
+\section*{Acknowledgment}
+The authors would like to thank the anonymous reviewers for their valuable comments and suggestions.
+
+\begin{thebibliography}{99}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{#1}
+\providecommand{\urlpref}[1]{\textsuperscript{#1}}
+
+\bibitem{You2021} Y. You and et al., "A survey on 6G communications: Challenges, vision, paradigm enablements and technologies," \emph{IEEE Commun. Surveys Tuts.}, vol. 23, no. 4, pp. 2340-2385, 2021.
+
+\bibitem{Rappaport2013} T. S. Rappaport, \emph{Wireless Communications: Principles and Practice}. Pearson Education, 2013.
+
+\bibitem{Chen2018} M. Chen and et al., "Machine learning for wireless communications: A comprehensive survey," \emph{IEEE Commun. Surveys Tuts.}, vol. 20, no. 2, pp. 1015-1041, 2018.
+
+\bibitem{Sutton2018} R. S. Sutton and A. G. Barto, \emph{Reinforcement Learning: An Introduction}. MIT Press, 2018.
+
+\bibitem{Eisen2019} M. Eisen and et al., "Learning optimal power allocations in wireless systems," in \emph{IEEE ICASSP}, 2019, pp. 4846-4850.
+
+\bibitem{Sun2019} H. Sun and et al., "Learning to optimize: Training deep neural networks for interference management," \emph{IEEE Trans. Signal Process.}, vol. 66, no. 20, pp. 5438-5453, 2019.
+
+\bibitem{Neumann2020} O. Neumann and et al., "Deep reinforcement learning for scheduling in 5G and beyond networks," \emph{IEEE J. Sel. Areas Commun.}, vol. 38, no. 1, pp. 143-159, 2020.
+
+\bibitem{Chen2020} Z. Chen and et al., "Deep learning in mobile edge computing: Resource allocation and computation offloading," \emph{IEEE Wireless Commun.}, vol. 27, no. 3, pp. 68-73, 2020.
+
+\bibitem{Liao2020} Y. Liao and et al., "Deep learning for 6G communications: Challenges and opportunities," \emph{China Commun.}, vol. 17, no. 9, pp. 47-60, 2020.
+
+\bibitem{Zhang2019} C. Zhang and et al., "Deep learning based radio resource allocation in 5G: A survey," \emph{IEEE Access}, vol. 7, pp. 138,931-138,947, 2019.
+\end{thebibliography}
+
+\end{document}
