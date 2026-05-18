@@ -78,7 +78,7 @@
 \fancyhead[LO]{\liuhao 第1期}
 % 偶数页（左页）：左=·页码，中=通 信 学 报，右=第40卷
 \fancyhead[LE]{\liuhao $\cdot$\thepage$\cdot$}
-\fancyhead[CE]{\liuhao 通··信··学··报}
+\fancyhead[CE]{\liuhao 通\quad 信\quad 学\quad 报}
 \fancyhead[RE]{\liuhao 第40卷}
 \renewcommand{\headrulewidth}{0.4pt}
 
@@ -92,7 +92,13 @@
 \renewcommand{\algorithmicensure}{\textbf{输出:}}
 
 \begin{document}
-\thispagestyle{empty} % 第一页不要页眉页脚
+% 首页页眉设置
+\thispagestyle{fancy}
+\fancyhf{}
+\fancyhead[LO]{\liuhao 第40卷第1期\\2019年1月}
+\fancyhead[CO]{\liuhao 通\quad 信\quad 学\quad 报\\Journal on Communications}
+\fancyhead[RO]{\liuhao Vol.40 No.1\\January 2019}
+\renewcommand{\headrulewidth}{0.4pt}
 
 \begin{adjustwidth}{2em}{2em}
 \begin{center}
@@ -159,7 +165,7 @@
 \fancyhead[LO]{\liuhao 第1期}
 % 偶数页（左页）：左=·页码·，中=通 信 学 报，右=第40卷
 \fancyhead[LE]{\liuhao $\cdot$\thepage$\cdot$}
-\fancyhead[CE]{\liuhao 通 信 学 报}
+\fancyhead[CE]{\liuhao 通\quad 信\quad 学\quad 报}
 \fancyhead[RE]{\liuhao 第40卷}
 \renewcommand{\headrulewidth}{0.4pt}
 
