@@ -95,9 +95,9 @@
 % 首页页眉设置
 \thispagestyle{fancy}
 \fancyhf{}
-\fancyhead[LO]{\liuhao 第40卷第1期\\2019年1月}
+\fancyhead[LO]{\liuhao 第40卷第1期\\2025年1月}
 \fancyhead[CO]{\liuhao 通\quad 信\quad 学\quad 报\\Journal on Communications}
-\fancyhead[RO]{\liuhao Vol.40 No.1\\January 2019}
+\fancyhead[RO]{\liuhao Vol.40 No.1\\January 2025}
 \renewcommand{\headrulewidth}{0.4pt}
 
 \begin{adjustwidth}{2em}{2em}
@@ -116,7 +116,7 @@
     % 中文摘要 - 小五字体，整体缩进
     \begin{adjustwidth}{2em}{2em}
     {\xiaowu
-    \textbf{摘\quad 要}：大规模多输入多输出（Massive MIMO）技术是5G/6G通信系统的核心技术，其预编码与功率分配的联合优化问题具有非凸性和高维度特性。传统迭代算法如加权最小均方误差（WMMSE）算法，计算复杂度随用户数呈超线性增长，难以满足毫秒级延迟需求。针对这一挑战，本文提出一种基于复数域深度学习的端到端预编码与功率分配联合优化方法。主要创新点包括：（1）设计复数全连接层与实值激活函数混合的神经网络架构，实现端到端复数运算；（2）采用无监督学习框架，以负和速率为损失函数，无需预设最优标签；（3）理论分析与仿真验证表明，所提方法对信道估计误差具有良好的鲁棒性。实验结果显示，所提方法在多种信道条件下性能达到WMMSE算法的95\%以上，而计算效率提升约24倍，为Massive MIMO系统的实时资源优化提供了新方案。\par
+    \textbf{摘\quad 要}：大规模多输入多输出（Massive MIMO）技术是5G/6G通信系统的核心，其预编码与功率分配联合优化问题具有非凸性和高维度特性。传统迭代算法如加权最小均方误差（WMMSE）算法，计算复杂度随用户数呈超线性增长，难以满足毫秒级延迟需求。针对该挑战，本文提出一种基于复数域深度学习的端到端预编码与功率分配联合优化方法。主要创新点包括：（1）设计复数全连接层与实值激活函数混合的神经网络架构，实现端到端复数运算；（2）采用无监督学习框架，以负和速率为损失函数，无需预设最优标签；（3）通过理论分析与仿真验证，表明本文方法对信道估计误差具有良好鲁棒性。实验结果表明，本文方法在多种信道条件下性能可达到WMMSE算法的95\%以上，同时计算效率提升约24倍，为Massive MIMO系统实时资源优化提供了新的解决思路。\par
     \noindent \textbf{关键词}：大规模MIMO；深度学习；预编码；功率分配；无监督学习\par
     \noindent \textbf{中图分类号}：TN929.5\par
     \noindent \textbf{文献标志码}：A\par
@@ -138,7 +138,7 @@
     % 英文摘要 - 小五字体，整体缩进
     \begin{adjustwidth}{2em}{2em}
     {\xiaowu
-    \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a cornerstone technology for 5G and beyond communication systems, enabling significant improvements in spectral efficiency and system capacity. However, the joint optimization of precoding and power allocation poses formidable challenges due to its inherent non-convexity and high computational complexity. Traditional iterative approaches, such as the weighted minimum mean square error (WMMSE) algorithm, suffer from slow convergence when scaled to large user populations, hindering real-time implementation. To address these limitations, this paper presents an end-to-end deep learning framework for downlink multi-user MIMO systems. A hybrid neural network architecture is proposed, integrating complex-valued fully connected layers with real-valued activation functions to directly map channel state information to optimal precoding matrices. Comprehensive simulations demonstrate three key contributions: 1) The proposed method achieves within 95\% of WMMSE performance across diverse channel conditions; 2) Computational latency is reduced by over two orders of magnitude compared to traditional algorithms; 3) Superior robustness to channel estimation errors is achieved. This work provides a novel data-driven approach for real-time resource optimization in massive MIMO systems.\par
+    \textbf{Abstract}：Massive multiple-input multiple-output (MIMO) is a cornerstone technology for 5G and beyond communication systems, enabling significant improvements in spectral efficiency and system capacity. However, the joint optimization of precoding and power allocation poses formidable challenges due to its inherent non-convexity and high computational complexity. Traditional iterative approaches, such as the weighted minimum mean square error (WMMSE) algorithm, suffer from slow convergence when scaled to large user populations, hindering real-time implementation. To address these limitations, this paper presents an end-to-end deep learning framework for downlink multi-user MIMO systems. A hybrid neural network architecture is proposed, integrating complex-valued fully connected layers with real-valued activation functions to directly map channel state information to optimized precoding matrices. Comprehensive simulations demonstrate three main contributions: 1) the proposed method achieves within 95\% of WMMSE performance across diverse channel conditions; 2) computational latency is reduced by over twenty times compared to traditional algorithms; 3) superior robustness to channel estimation errors is achieved. This work provides a novel data-driven approach for real-time resource optimization in massive MIMO systems.\par
     \noindent \textbf{Keywords}：massive MIMO; deep learning; precoding; power allocation; unsupervised learning\par
     }
     \end{adjustwidth}
@@ -177,7 +177,7 @@
 
 \section{引言}
 
-随着移动数据流量的指数级增长，第五代（5G）及未来第六代（6G）移动通信系统对频谱效率和系统容量提出了前所未有的要求。大规模多输入多输出（Massive MIMO）技术作为核心关键技术，通过在基站部署大规模天线阵列，能够显著提升空间复用增益、阵列增益和干扰抑制能力，已成为学术界和工业界的研究热点\upcite{1}。然而，Massive MIMO系统的实际性能高度依赖于高效的预编码与功率分配策略，其联合优化问题具有固有的非凸性和高维度特性，给算法设计带来了根本性挑战。
+随着移动数据流量的指数级增长，第五代（5G）及未来第六代（6G）移动通信系统对频谱效率和系统容量提出了更高要求。大规模多输入多输出（Massive MIMO）技术通过在基站部署大规模天线阵列，能够显著提升空间复用增益、阵列增益和干扰抑制能力，已成为学术界和工业界的研究热点\upcite{1}。然而，Massive MIMO系统性能强烈依赖预编码与功率分配策略，其联合优化问题具有固有的非凸性和高维度特性，因此设计高效算法仍面临实质性挑战。
 
 传统预编码方案可分为线性和非线性两类：线性方案如迫零（ZF）、正则化迫零（RZF）等计算复杂度较低但性能受限；非线性方案如脏纸编码（DPC）理论性能最优但实现复杂度极高，难以实际部署\upcite{10}。近年来，加权最小均方误差（WMMSE）算法通过交替优化框架在性能与复杂度之间取得了较好平衡，成为当前主流方法\upcite{2}。然而，WMMSE算法的迭代特性导致其计算复杂度随用户数量呈超线性增长（$O(K^3 N_t^3)$），在大规模用户场景下单次迭代时间可达数百毫秒，难以满足5G/6G系统毫秒级延迟的实时通信需求\upcite{12}。
 
@@ -190,13 +190,11 @@
     \item \textbf{泛化能力有限}：在训练数据集之外的信道条件下性能下降明显，难以适应多样化的实际场景\upcite{9}。
 \end{enumerate}
 
-针对上述挑战，本文提出一种基于复数域深度学习的端到端优化方案，旨在突破现有方法的性能瓶颈，为Massive MIMO系统提供高效、鲁棒的预编码与功率分配解决方案。
-
-针对上述问题，本文提出一种基于深度神经网络的端到端预编码与功率分配联合优化方法，主要创新点如下：
+针对上述挑战，本文提出了一种基于复数域深度学习的端到端预编码与功率分配联合优化方法，旨在突破现有方法的性能瓶颈，为Massive MIMO系统提供高效且鲁棒的资源调度方案。本文的主要创新点如下：
 \begin{enumerate}[label=\arabic*), topsep=0pt, partopsep=0pt, itemsep=-5pt]
     \item \textbf{复数域神经网络设计}：提出复数全连接层与实值激活函数的混合架构，实现端到端的复数运算，避免实虚部分离带来的性能损失。
     \item \textbf{无监督学习框架}：以负和速率为损失函数，无需预设最优标签，直接优化系统性能指标。
-    \item \textbf{鲁棒性分析}：通过理论推导和仿真验证，证明所提方法对信道估计误差具有良好的鲁棒性。
+    \item \textbf{鲁棒性分析}：通过理论推导和仿真验证，证明本文方法对信道估计误差具有良好的鲁棒性。
 \end{enumerate}
 
 
@@ -224,7 +222,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{优化问题}
 
-本文的优化目标是在满足总功率约束的前提下最大化系统和速率，即：\vspace{-2em}
+本文考虑在总功率约束下最大化系统和速率，具体表达为：\vspace{-2em}
 
 \begin{subequations}
 \begin{align}
@@ -257,7 +255,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 \subsection{复数神经网络原理}
 
-在MIMO系统中，信道矩阵和预编码矢量均为复数，直接使用实数神经网络需将实部虚部分别处理，这会破坏复数相位关系的整体性，导致性能损失。为此，本文采用复数全连接层\upcite{5}，其数学表达式为：\vspace{-2em}
+由于信道矩阵和预编码向量本质上为复数，若采用实数神经网络分别处理实部与虚部，易破坏相位关系的完整性，从而导致性能下降。为此，本文采用复数全连接层\upcite{5}，其数学表达式为：\vspace{-2em}
 
 \begin{equation}
 \mathbf{y} = \mathbf{W}_c \mathbf{z} + \mathbf{b}_c
@@ -265,7 +263,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 
 其中，$\mathbf{W}_c \in \mathbb{C}^{m \times n}$为复数权重矩阵，$\mathbf{b}_c \in \mathbb{C}^{m}$为复数偏置向量，$\mathbf{z} \in \mathbb{C}^{n}$为复数输入向量。反向传播时，利用柯西-黎曼条件对复数变量求导，将复数梯度分解为实部和虚部两部分，确保梯度信息的完整传递。
 
-为避免复数激活函数（如modReLU）的数值不稳定性，本文采用CReLU激活函数\upcite{10}：\vspace{-2.2em}
+为规避复数激活函数（如modReLU）可能导致的数值不稳定性，本文采用CReLU激活函数\upcite{10}：\vspace{-2.2em}
 
 \begin{equation}
 \text{CReLU}(z) = \text{ReLU}(\Re(z)) + \mathrm{j} \cdot \text{ReLU}(\Im(z))
@@ -296,7 +294,7 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 }
 \end{table}
 
-由表1可见，在复数处理方面，文献\normalcite{3,4}采用实虚分离策略，破坏了复数运算的整体性，而本文方法与文献\normalcite{11}均采用复数域直接运算，更好地保留了相位信息。在学习方式上，文献\normalcite{3,4}依赖监督学习，需要大量标注数据；文献\normalcite{11}采用强化学习，训练过程不稳定；本文方法创新性地采用无监督学习，直接优化系统目标函数，无需人工标注。在性能损失方面，本文方法的性能损失小于2\%，显著优于其他方法（3\%-8\%）。计算复杂度方面，本文方法与文献\normalcite{3}相当（$O(N_t^2 K)$），远低于文献\normalcite{11}的$O(N_t^3)$。综上，本文方法在复数处理、学习方式和性能损失方面均具有明显优势。
+由表1可见，文献\normalcite{3,4}采用实虚分离策略，从而破坏复数运算的整体性；而本文方法与文献\normalcite{11}均在复数域内直接运算，更好地保留相位信息。学习方式上，文献\normalcite{3,4}依赖监督学习，需要大量标签数据；文献\normalcite{11}采用强化学习，训练过程相对不稳定；而本文方法采用无监督学习，直接优化系统性能指标，无需人工标注。性能损失方面，本文方法小于2\%，显著优于其他方法（3\%-8\%）。此外，本文方法的计算复杂度为$O(N_t^2 K)$，与文献\normalcite{3}相当，远低于文献\normalcite{11}的$O(N_t^3)$。因此，本文方法在复数处理、学习方式和性能/复杂度权衡方面均呈现出优势。
 
 \subsection{网络结构}
 本文设计的深度预编码网络（DPNet）结构如图1所示。输入层接收用户信道矩阵$\mathbf{H}$（展平为$K \times N_t$复数向量）。随后经过三个复数全连接层，神经元数目分别为$512$、$1024$和$2K N_t$。最后一层的输出重新整形为复数预编码矩阵$\mathbf{W} \in \mathbb{C}^{N_t\times K}$。功率约束通过一个投影层实现：
@@ -383,18 +381,18 @@ y_k = \mathbf{h}_k \mathbf{w}_k s_k + \sum_{j \neq k} \mathbf{h}_k \mathbf{w}_j 
 \end{tabular}}
 \end{table}
 
-表3给出了本文仿真实验的关键参数设置。基站天线数$N_t$和用户数$K$设置了多个取值组合，以验证方法在不同系统规模下的通用性；训练样本数设置为10万，确保模型能够充分学习信道特征；批次大小和学习率经过多次调试确定，在收敛速度和稳定性之间取得平衡。
+表3列出了本文仿真实验的关键参数设置。基站天线数$N_t$和用户数$K$采用多个取值组合，以验证本文方法在不同系统规模下的通用性；训练样本数为10万，以确保模型能够充分学习信道特征；批次大小和学习率的选择则兼顾收敛速度与训练稳定性。
 
 \subsection{和速率性能对比}
 
 图2系统地对比了六种预编码方法在不同信噪比条件下的和速率性能。测试场景设置为$N_t=64$、$K=16$，信道采用独立同分布瑞利衰落模型。
 
-在低信噪比区域（0-10 dB），所有方法的和速率均随SNR呈近似线性增长趋势，本文方法与WMMSE算法的性能曲线几乎重合，和速率差距小于0.1 bit/s/Hz。这表明在低SNR条件下，系统性能主要受噪声限制，预编码算法的差异对系统容量影响较小。进入中等信噪比区域（10-20 dB）后，各方法的性能差异开始显现：ZF-EPA由于采用等功率分配策略，和速率明显受限；ZF-WF通过注水算法优化功率分配，性能提升约10\%；本文方法与WMMSE的差距保持在0.3 bit/s/Hz以内，而DNN-Sep方法的性能损失约为WMMSE的5\%，验证了复数域处理的优越性。在高信噪比区域（>20 dB），WMMSE算法达到性能上限，本文方法存在约0.5 dB的信噪比损失，这是由于深度学习模型在训练数据集边界处的泛化能力受限，但仍优于DNN-Sep方法约2 dB，且和速率仍能达到23.5 bit/s/Hz，满足实际系统需求。对比本文方法与DNN-Sep方法可见，复数域神经网络在全SNR范围内均展现出明显优势，平均性能提升约3\%，验证了直接处理复数信道矩阵能够更好地保留相位信息，避免实虚分离造成的性能损失。综上，本文方法在保持接近最优性能的同时，避免了传统迭代算法的高复杂度。
+在低信噪比区域（0-10 dB），所有方法的和速率均随SNR呈近似线性增长，本文方法与WMMSE算法的性能曲线几乎重合，和速率差距小于0.1 bit/s/Hz。这表明在低SNR条件下，系统性能主要受噪声限制，预编码算法的差异对容量影响较小。进入中等信噪比区域（10-20 dB）后，各方法的性能差异开始显现：ZF-EPA由于采用等功率分配策略，和速率明显受限；ZF-WF通过注水算法优化功率分配，性能提升约10\%；本文方法与WMMSE的差距保持在0.3 bit/s/Hz以内，而DNN-Sep方法的性能损失约为WMMSE的5\%，这反映了复数域处理在保持相位信息方面的优越性。在高信噪比区域（>20 dB），WMMSE算法接近性能上限，本文方法存在约0.5 dB的信噪比损失，这可能与模型在训练数据边界处的泛化能力有关；但本文方法仍优于DNN-Sep约2 dB，且和速率可达23.5 bit/s/Hz，满足实际系统需求。总体而言，本文方法在保持接近最优性能的同时，显著降低了计算复杂度。
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth]{sumrate.png}
-\caption{不同方法的和速率对比}
+\caption{不同方法在多用户MIMO系统中的和速率性能比较。}
 \label{fig:sumrate}
 \end{figure}
 
@@ -423,27 +421,27 @@ DNN-Sep & $O(N_t^2 K)$ & 0.4 & 22.1 \\
 }
 \end{table}
 
-表中$I$为WMMSE算法的迭代次数（本文取30次以确保收敛）。从计算复杂度来看，ZF-EPA、RZF的理论复杂度为$O(N_t^3+K N_t^2)$，ZF-WF因需求解注水功率分配，复杂度增加至$O(N_t^3+K^3)$；WMMSE算法的复杂度为$O(I K^3 N_t^3)$，随用户数和天线数呈超线性增长；深度学习方法（DNN-Sep和本文方法）的复杂度均为$O(N_t^2 K)$，仅与天线数和用户数呈二次关系。在实际运行时间方面，ZF-EPA最快（0.05ms），但性能最差；WMMSE耗时最长（8.5ms），性能最优；本文方法的运行时间仅为0.35ms，约为WMMSE的4.1\%，而和速率达到WMMSE的97.9\%。从性能-复杂度权衡角度分析，本文方法在性能损失仅2.1\%的情况下，计算效率提升约24倍，实现了良好的性能-复杂度权衡；相比之下，DNN-Sep虽然复杂度相同，但性能损失达8.2\%，验证了本文复数域设计的有效性。特别地，深度学习方法的运行时间基本不随信道条件变化，而WMMSE的收敛时间受初始点和信道条件影响较大，在恶劣信道条件下可能需要更多迭代次数。
+表中$I$为WMMSE算法的迭代次数（本文取30次以确保收敛）。从计算复杂度来看，ZF-EPA、RZF的理论复杂度为$O(N_t^3+K N_t^2)$，ZF-WF因需求解注水功率分配，复杂度增加至$O(N_t^3+K^3)$；WMMSE算法的复杂度为$O(I K^3 N_t^3)$，随用户数和天线数呈超线性增长；深度学习方法（DNN-Sep和本文方法）的复杂度均为$O(N_t^2 K)$，仅与天线数和用户数呈二次关系。在实际运行时间方面，ZF-EPA最快（0.05ms），但性能最差；WMMSE耗时最长（8.5ms），性能最优；本文方法的运行时间仅为0.35ms，约为WMMSE的4.1\%，而和速率达到WMMSE的97.9\%。从性能-复杂度权衡角度分析，本文方法在性能损失仅2.1\%的情况下，计算效率提升约24倍，实现了良好的性能-复杂度权衡；相比之下，DNN-Sep虽然复杂度相同，但性能损失达8.2\%，验证了所提复数域设计的有效性。特别地，深度学习方法的运行时间基本不随信道条件变化，而WMMSE的收敛时间受初始点和信道条件影响较大，在恶劣信道条件下可能需要更多迭代次数。
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth]{sumrate2.png}
-\caption{不同方法和速率对比（$N_t=16, K=8$）}
+\caption{小规模场景（$N_t=16$, $K=8$）下不同方法的和速率比较。}
 \label{fig:sumrate2}
 \end{figure}
 
-图3展示了小规模场景下（$N_t=16$、$K=8$）各方法的性能对比。与大规模场景类似，本文方法在全SNR范围内均保持接近WMMSE的性能，验证了所提方法的通用性。特别地，在小规模场景下，本文方法的性能损失进一步降低至1.5\%以内，这是因为较小的网络规模更容易学习到信道特征。
+图3展示了小规模场景下（$N_t=16$、$K=8$）各方法的性能对比。与大规模场景类似，本文方法在全SNR范围内均保持接近WMMSE的性能，验证了其通用性。特别地，在小规模场景下，本文方法的性能损失进一步降低至1.5\%以内，这说明较小的网络规模更易于学习信道特征。
 
 \subsection{在线推理性能验证}
 
 表5进一步验证了各方法在实际部署场景下的在线推理性能。测试条件为$N_t=64$、$K=16$、SNR=15dB，每个方法独立运行1000次取平均值。
 
-结果显示，本文提出的DPNet方法推理时间仅需0.31ms，相比WMMSE算法（30次迭代）提速约20倍。从实时性角度分析，DPNet的0.31ms推理延迟满足5G/6G系统对毫秒级延迟的要求，可支持1ms调度周期下的实时预编码更新。在性能损失方面，ZF-EPA虽然最快（0.05ms），但和速率仅为12.3 bit/s/Hz，相比WMMSE损失约34\%；而DPNet仅损失2.7\%，在实时性与性能之间取得了优异的平衡。从部署角度看，深度学习模型可通过模型压缩、量化等技术进一步降低推理延迟，为边缘部署提供了更大的优化空间。综上，DPNet在保证接近最优性能的同时，实现了实时推理能力，为Massive MIMO系统的实际部署提供了可行方案。
+结果表明，所提DPNet方法推理时间仅需0.31ms，相比WMMSE算法（30次迭代）提速约20倍。从实时性角度分析，该推理延迟满足5G/6G系统对毫秒级延迟的要求，可支持1ms调度周期下的实时预编码更新。在性能损失方面，ZF-EPA虽然最快（0.05ms），但和速率仅为12.3 bit/s/Hz，相比WMMSE损失约34\%；而DPNet仅损失2.7\%，在实时性与性能之间取得了较好平衡。从部署角度看，深度学习模型可通过模型压缩、量化等技术进一步降低推理延迟，为边缘部署提供更大的优化空间。综上，DPNet在保证接近最优性能的同时，实现了实时推理能力，为Massive MIMO系统的实际部署提供了可行方案。
 
 % 确保表格宽度适配页面
 \begin{table}[htbp]
 \centering
-\caption{不同方法的运行时间对比}
+\caption{不同方法的在线推理时间与和速率对比}
 \label{tab:complexity2}
 {\fontsize{7.5pt}{9pt}\selectfont
 \begin{tabular}{lcc}
@@ -453,7 +451,7 @@ DNN-Sep & $O(N_t^2 K)$ & 0.4 & 22.1 \\
 ZF-EPA & 0.05 & 12.3 \\
 ZF-WF & 0.12 & 14.1 \\
 WMMSE(30 iter) & 6.2 & 18.7 \\
-DPNet(本文) & 0.31 & 18.2 \\
+DPNet(所提) & 0.31 & 18.2 \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -477,7 +475,7 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 图4（SNR=20 dB）展示了不同信道估计误差强度下各方法的和速率损失。测试中误差矩阵$\mathbf{E}$的元素服从$\mathcal{CN}(0, 1)$分布，$\varepsilon$为误差缩放因子。
 
-在无误差场景（$\varepsilon = 0$）下，本文方法与WMMSE性能一致，和速率均达到24.2 bit/s/Hz。当误差强度增加到0.05时，本文方法的性能损失仅为0.3 dB，而WMMSE为0.8 dB；当$\varepsilon = 0.1$时，本文方法的性能损失为0.6 dB，而WMMSE为1.5 dB。随着误差强度继续增加，本文方法的性能下降趋势明显缓于其他方法。这一结果表明，深度学习方法通过训练过程中的数据增强和正则化机制，对信道估计误差具有天然的鲁棒性。
+在无误差场景（$\varepsilon = 0$）下，本文方法与WMMSE性能一致，和速率均达到24.2 bit/s/Hz。当误差强度增加到0.05时，本文方法的性能损失仅为0.3 dB，而WMMSE为0.8 dB；当$\varepsilon = 0.1$时，本文方法的性能损失为0.6 dB，而WMMSE为1.5 dB。随着误差强度增大，本文方法的性能下降趋势明显缓于其他方法。这一结果表明，本文方法在训练过程中引入数据增强和正则化机制后，对信道估计误差表现出较强鲁棒性。
      
 \subsection{参数敏感性分析}
 
@@ -503,13 +501,13 @@ DPNet(本文) & 0.31 & 18.2 \\
 
 \section{结论}
 
-本文针对Massive MIMO系统中预编码与功率分配的联合优化问题，提出了一种基于复数域深度学习的端到端解决方案。通过设计复数全连接层与实值激活函数混合的神经网络架构，实现了从信道状态信息到最优预编码矩阵的直接映射。主要研究成果如下：
+本文针对Massive MIMO系统中的预编码与功率分配联合优化问题，提出了一种基于复数域深度学习的端到端优化框架。该方法通过设计复数全连接层与实值激活函数混合的神经网络，实现了从信道状态信息到预编码矩阵的直接映射。主要贡献如下：
 
-（1）提出了复数域神经网络架构，有效处理复数信道矩阵，避免了传统实虚分离方法带来的性能损失；
-（2）设计了无监督学习框架，以负和速率为损失函数，无需预设最优标签，降低了训练成本；
-（3）通过理论分析和仿真验证，证明了所提方法在不同信道条件下的有效性和鲁棒性。
+（1）提出复数域神经网络架构，有效处理复数信道矩阵并避免传统实虚分离方法带来的性能损失；
+（2）构建无监督学习框架，以负和速率为损失函数，直接优化系统性能指标，免除最优标签生成过程；
+（3）通过理论推导与仿真验证，证明了本文方法在多种信道条件下具有较高性能和良好鲁棒性。
 
-实验结果表明，所提方法在多种信道场景下性能达到WMMSE算法的95\%以上，计算效率提升约24倍，且对信道估计误差具有良好的鲁棒性。未来研究方向包括：扩展至多小区协作场景、结合能效优化目标、考虑硬件实现约束以及探索联邦学习框架下的分布式优化方案。本研究为智能通信系统的设计提供了新的思路和方法，具有重要的理论意义和实际应用价值。
+仿真结果表明，本文方法在多种信道场景下性能可达到WMMSE算法的95\%以上，计算效率提升约24倍，同时对信道估计误差表现出较强的鲁棒性。未来研究可进一步扩展至多小区协同场景，结合能效优化目标，考虑硬件实现约束，并探索联邦学习框架下的分布式优化方案。这项工作为智能通信系统的设计提供了新的可行思路，具有重要的理论意义和实际应用价值。
 
 \appendix
 \section{损失函数梯度推导}
